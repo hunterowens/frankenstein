@@ -206,7 +206,7 @@ def chat():
         output_file = open(os.path.join(config.PROCESSED_PATH, config.OUTPUT_FILE), 'a+')
         # Decode from standard input.
         max_length = config.BUCKETS[-1][0]
-        print('Welcome to TensorBro. Say something. Enter to exit. Max length is', max_length)
+        print('Welcome to the chat. Say something. Enter to exit. Max length is', max_length)
         while True:
             line = _get_user_input()
             if len(line) > 0 and line[-1] == '\n':

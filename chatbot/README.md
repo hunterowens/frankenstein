@@ -1,4 +1,3 @@
-<<<<<<<
 A neural chatbot using sequence to sequence model with
 attentional decoder. This is a fully functional chatbot.
 
@@ -115,4 +114,3 @@ If you find the tutorial helpful, please head over to <a href="http://web.stanfo
 to see how you can help us create the first realistic dialogue dataset.
 
 Thank you very much!
->>>>>>> origin/master
