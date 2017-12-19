@@ -1,0 +1,5 @@
+CONFIG = {
+    'FACEBOOK_TOKEN': 'EAACAtrY81GABAEXGkQZA6fAA6UOaHeqLzfhcpXyLJFoTUCx3Sh0C5ZBL7QgfZB9QJpaWZAegFQsdCqkeUckiHjnZBw0mwgNAXr6Lek6eQ6Ml2txnOBNzxRgZBSpyhZB0c61gOb6fSL1CrTmbmZBCgX0HCJcpobdOXxInsAupO8tHEgZDZD',
+    'VERIFY_TOKEN': 'verify_simsimbot',
+    'SERVER_URL': 'http://localhost:8081'
+}
