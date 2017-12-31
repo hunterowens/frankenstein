@@ -5,16 +5,56 @@ import argparse
 from pythonosc import dispatcher, osc_server, udp_client
 import math
 import threading
+import asyncio
+
+
+current_sentiment = None 
+current_focus = None 
+current_energy = None
+
+async def sent_state_to_ai(current_focus, current_energy, current_sentiment):
+    """
+    sents the state as JSON to the AI 
+    """
+    ## TODO: Implement read 
+    ## TODO: Implement sent to AI 
+    pass
+
+def setup():
+    """
+    sets AI in waiting state
+    """
+    current_sentiment = 0
+    current_focus = 0
+    current_energy = 0
+    sent_state_to_ai(current_focus, current_energy, current_sentiment)
+    print("AI Init State Waiting")
+    return None
 
 def osc_dispatch(addr, msg, ip='127.0.0.1', port=5050):
     """
     Dispatches a message in state change over OSC to all listeners
     """
-    client = udp_client.SimpleUDPClient(ip, int(port))
-    return client.sent_message(addr, msg)
+    client = udp_client.SimpleUDPClient(ip, port)
+    print(client.send_message(addr, msg))
+    return None
 
-def print_volume_handler(unused_addr, args, volume):
-    print("[{0}] ~ {1}".format(args[0], volume))
+def surface_handler(unused_addr, args, string):
+    """
+    Handles the surface messages, alts sentiment
+
+    Surface argument to be OSC String Formatted as followed
+    "sentiment: value; focus: value; energy: value"
+    """
+    try: 
+        vals = json.load(string)
+    except ValueError:
+        print("Unable to decode JSON from Surface")
+        exit()
+    current_sentiment = vals['sentiment']
+    current_focus = vals['focus']
+    current_energy = vals['energy']
+    send_to_ai
 
 def print_compute_handler(unused_addr, args, volume):
     try:
@@ -26,19 +66,11 @@ def osc_server(ip='127.0.0.1', port=5050):
     sets up and runs the OSC server. 
     """
     dispatch = dispatcher.Dispatcher()
-    dispatch.map("/volume", print_volume_handler, "Volume")
-    dispatch.map("/logvolume", print_compute_handler, "Log volume", math.log)
-
+    dispatcher.map("/surface-sentiments", surface_handler, string)
     server = pythonosc.osc_server.ThreadingOSCUDPServer(
          (ip, port), dispatcher)
     print("Serving on {}".format(server.server_address))
     server.serve_forever()
-
-def act_1():
-    pass
-
-def act_2():
-    pass
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -50,10 +82,3 @@ if __name__ == '__main__':
           help="which act the performacne is on")
     args = parser.parse_args()
     osc_server()
-    osc_dispatch('/volume', "test")
-    if args.act == 1:
-        act_1()
-    else: 
-        act_2()
-
-    
