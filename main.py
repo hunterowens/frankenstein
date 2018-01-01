@@ -2,11 +2,10 @@ import json
 import pythonosc
 import chatbot
 import argparse
-from pythonosc import dispatcher, osc_server, udp_client
 import math
-import threading
 import asyncio
-
+import datetime
+from pythonosc import dispatcher, osc_server, udp_client
 
 current_sentiment = None 
 current_focus = None 
@@ -31,7 +30,7 @@ def setup():
     print("AI Init State Waiting")
     return None
 
-def osc_dispatch(addr, msg, ip='127.0.0.1', port=5050):
+async def osc_dispatch(addr, msg, ip='127.0.0.1', port=5050):
     """
     Dispatches a message in state change over OSC to all listeners
     """
@@ -54,13 +53,9 @@ def surface_handler(unused_addr, args, string):
     current_sentiment = vals['sentiment']
     current_focus = vals['focus']
     current_energy = vals['energy']
-    send_to_ai
-
-def print_compute_handler(unused_addr, args, volume):
-    try:
-        print("[{0}] ~ {1}".format(args[0], args[1](volume)))
-    except ValueError: pass
-
+    send_to_ai(current_focus, current_energy, current_sentiment)
+    print("Surface updated AI State at: ", datetime.datetime.now().time())
+    
 def osc_server(ip='127.0.0.1', port=5050):
     """
     sets up and runs the OSC server. 
