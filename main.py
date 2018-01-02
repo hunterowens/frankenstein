@@ -117,7 +117,7 @@ def silent_handler(unused_addr, args, boolean):
 
     return
 
-async def osc_server(ip='127.0.0.1', port=5050):
+def osc_server(ip='127.0.0.1', port=5050):
     """
     sets up and runs the OSC server. 
     """
@@ -148,6 +148,6 @@ if __name__ == '__main__':
     if args.server:
         osc_server()
     if args.state:
-        broadcast_state()
+        s = yield from broadcast_state()
     if args.text:
-        broadcast_questions()
+        t = yield from broadcast_questions()
