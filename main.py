@@ -8,7 +8,7 @@ import datetime
 from pythonosc import dispatcher, osc_server, udp_client
 import requests
 
-async def sent_state_to_ai(current_focus, current_energy, current_sentiment):
+def sent_state_to_ai(current_focus, current_energy, current_sentiment):
     """
     sents the state as JSON to the AI 
     """
@@ -32,7 +32,7 @@ def setup():
     print("AI Init State Waiting")
     return None
 
-async def osc_dispatch(addr, msg, ip='127.0.0.1', port=5050):
+def osc_dispatch(addr, msg, ip='127.0.0.1', port=5050):
     """
     Dispatches a message in state change over OSC to all listeners
     """
@@ -40,7 +40,7 @@ async def osc_dispatch(addr, msg, ip='127.0.0.1', port=5050):
     print(client.send_message(addr, msg))
     return None
 
-async def broadcast_state():  
+def broadcast_state():  
     """
     Broadcasts state
     """
@@ -50,7 +50,7 @@ async def broadcast_state():
         osc_dispatch(k,v)
     return
 
-async def broadcast_questions():
+def broadcast_questions():
     """
     broadcast the questions
     """
@@ -142,6 +142,6 @@ if __name__ == '__main__':
     if args.server:
         osc_server()
     if args.state:
-        s = yield from broadcast_state()
+        s = broadcast_state()
     if args.text:
-        t = yield from broadcast_questions()
+        t = broadcast_questions()
