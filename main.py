@@ -6,10 +6,7 @@ import math
 import asyncio
 import datetime
 from pythonosc import dispatcher, osc_server, udp_client
-
-current_sentiment = None 
-current_focus = None 
-current_energy = None
+import requests
 
 async def sent_state_to_ai(current_focus, current_energy, current_sentiment):
     """
@@ -31,10 +28,7 @@ def setup():
     """
     sets AI in waiting state
     """
-    current_sentiment = 0
-    current_focus = 0
-    current_energy = 0
-    sent_state_to_ai(current_focus, current_energy, current_sentiment)
+    requests.get("./reset")
     print("AI Init State Waiting")
     return None
 
