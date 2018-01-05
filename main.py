@@ -10,7 +10,7 @@ import requests
 
 def sent_state_to_ai(current_focus, current_energy, current_sentiment):
     """
-    sents the state as JSON to the AI 
+    sents the state / new talking  as JSON to the AI 
     """
     ## TODO: Implement read 
     ## TODO: Implement sent to AI 
@@ -44,6 +44,7 @@ def broadcast_state():
     """
     Broadcasts state
     """
+    ## TODO: Run in infinite loop version 
     state = get_state_from_ai()
     for k,v in state:
         print("Distpaching {0} with value {1}", k,v)
@@ -115,11 +116,12 @@ def osc_server(ip='127.0.0.1', port=5050):
     """
     sets up and runs the OSC server. 
     """
-    dispatcher = dispatcher.Dispatcher()
-    dispatcher.map("/surface-sentiments", surface_handler, string)
-    dispatcher.map("/reset", reset_handler, boolean)
-    dispatcher.map("/silent", silent_handler, boolean)
-
+    dispatch = dispatcher.Dispatcher()
+    dispatch.map("/surface-sentiments", surface_handler)
+    dispatch.map("/reset", reset_handler)
+    dispatch.map("/silent", silent_handler)
+    ## TODO: Talk State - > triger from AI to get new words/questions etc from teh AI on the server and then broadcast 
+    
     server = pythonosc.osc_server.ThreadingOSCUDPServer(
          (ip, port), dispatcher)
     print("Serving on {}".format(server.server_address))
@@ -141,7 +143,7 @@ if __name__ == '__main__':
     
     if args.server:
         osc_server()
-    if args.state:
-        s = broadcast_state()
-    if args.text:
-        t = broadcast_questions()
+    elif args.state:
+        broadcast_state()
+    elif args.text:
+        broadcast_questions()
