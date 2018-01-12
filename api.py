@@ -1,14 +1,14 @@
 import flask
 import sqlite3
-app = flask.Flask(__name__)
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
-DATABASE = '/path/to/database.db'
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+db = SQLAlchemy(app)
 
-def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect(DATABASE)
-    return db
+class State(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
 
 @app.route("/reset")
 def reset():
@@ -42,6 +42,14 @@ def interact():
         ## TODO generate questions
         ## TODO setup json object
         return the_json_object
+
+@app.route("/form-data", method=['GET','POST'])
+def form_data():
+    """
+    Takes the form data as an HTTP Post, 
+    returns the canned hello for http GET sentence. 
+    """
+    return "test"
 
 if __name__ == '__main__':
     app.run(debug=True)

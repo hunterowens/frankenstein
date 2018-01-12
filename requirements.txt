@@ -1,3 +1,7 @@
 requests
 pythonosc
 flask
+tensorflow
+markovify
+numpy
+
