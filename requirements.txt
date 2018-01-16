@@ -1,7 +1,11 @@
 requests
-pythonosc
+python-osc
 flask
 tensorflow
 markovify
 numpy
-
+gunicorn
+pandas
+sqlalchemy
+psycopg2
+Flask-SQLAlchemy
