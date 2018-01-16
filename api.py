@@ -23,6 +23,10 @@ class Text(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(5000))
 
+@app.route("/")
+def home():
+    return "Test works"
+
 @app.route("/reset")
 def reset():
     """
