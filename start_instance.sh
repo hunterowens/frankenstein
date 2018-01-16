@@ -1,7 +1,7 @@
 gcloud compute instances create frankenstein-ai-server \
     --machine-type n1-highmem-8 --zone us-central1-f \
-     --accelerator type=nvidia-tesla-k80,count=1 --boot-disk-size=100 \
-    --image ubuntu-1604-lts --image-project ubuntu-os-cloud \
+    --accelerator type=nvidia-tesla-p100,count=1 --boot-disk-size=250 \
+    --image  ubuntu-1604-xenial-v20180109 --image-project ubuntu-os-cloud \
     --maintenance-policy TERMINATE --restart-on-failure \
     --metadata startup-script='#!/bin/bash
     echo "Checking for CUDA and installing."

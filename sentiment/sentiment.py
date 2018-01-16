@@ -1,5 +1,5 @@
 """
-Makes and returns the 3 trained Sentiment extration models
+Makes and returns the trained Sentiment extration models
 """
 
 import pandas as pd
@@ -9,6 +9,46 @@ from sklearn import metrics
 
 def load_data():
     return pd.read_csv('./training_data.csv', skiprows=[1])
+
+def catagorize(row):
+    """
+    apply function to catagorize a set of traing data values into 
+    catagories. 
+    """
+    sentiment = 0
+    focus = 0 
+    energy_level = 0 ## TODO replace with real
+    if sentiment > 0:
+        if focus > 0: # focus outward
+            if energy_level > .25:
+                return "connected"
+            elif energy_level < -.25:
+                return "tolerant"
+            else:
+                return "vunerable"
+        else: # focus inward
+            if energy_level > .25:
+                return "hopeful" 
+            elif energy_level < -.25:
+                return "calm" 
+            else:
+                return "happy"
+    elif sentiment <= 0:
+        if focus > 0: #focus outward
+            if energy_level > .25:
+                return "angry"
+            elif energy_level < -.25:
+                return "lonely" 
+            else:
+                return "guarded"
+        else: #focus inward 
+            if energy_level > .25:
+                return  "anxious" 
+            elif energy_level < -.25:
+                return "sad"
+            else:
+                return "fearful"
+
 
 def generate_model():
     # Generate counts from text using a vectorizer.  There are other vectorizers available, and lots of options you can set.
@@ -30,5 +70,4 @@ def generate_model():
     print("Multinomial naive bayes AUC: {0}".format(metrics.auc(fpr, tpr)))
 
 if __name__ == '__main__':
-    # Run and train? 
     pass

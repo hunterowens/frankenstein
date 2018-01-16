@@ -117,7 +117,7 @@ def decode_embed(array, vocab):
 
 
 
-ckpt_file = ""
+ckpt_file = "saved/model.ckpt"
 TEST_PREFIX = "The " # Prefix to prompt the network in test mode
 
 print("Usage:")
@@ -216,11 +216,17 @@ TEST_PREFIX = TEST_PREFIX.lower()
 for i in range(len(TEST_PREFIX)):
 	out = net.run_step( embed_to_vocab(TEST_PREFIX[i], vocab) , i==0)
 
+text_file = open("data/fakenstein.txt", "a+")
 print("SENTENCE:")
-gen_str = TEST_PREFIX
-for i in range(LEN_TEST_TEXT):
-	element = np.random.choice( range(len(vocab)), p=out ) # Sample character from the network according to the generated output probabilities
-	gen_str += vocab[element]
+for _ in range(1000000):
+    gen_str = TEST_PREFIX
+    for i in range(LEN_TEST_TEXT):
+            element = np.random.choice( range(len(vocab)), p=out ) # Sample character from the network according to the generated output probabilities
+            gen_str += vocab[element]
 
-	out = net.run_step( embed_to_vocab(vocab[element], vocab) , False )
-print(gen_str)
+            out = net.run_step( embed_to_vocab(vocab[element], vocab) , False )
+    print(gen_str)
+    text_file.write(gen_str + '\n')
+
+text_file.close()
+
