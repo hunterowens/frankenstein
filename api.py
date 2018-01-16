@@ -2,6 +2,7 @@ import flask
 import sqlite3
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+import datetime 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
@@ -9,15 +10,27 @@ db = SQLAlchemy(app)
 
 class State(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    sentiment = db.Column(db.Float)
+    focus = db.Column(db.Float)
+    energy = db.Column(db.Float)
+
+class Text(db.Model):
+    """
+    class to store text in. 
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String(5000))
 
 @app.route("/reset")
 def reset():
     """
     Resets the state and API to null
     """
-    ## TODO: Implement state DB 
-    ## TODO:set to 0
-    return 
+    s = State(sentiment=0, focus=0, energy=0)
+    db.session.add(s)
+    db.session.commit()
+    return "Reset the state to 0"
 
 @app.route("/interact", methods=['GET','POST'])
 def interact():
@@ -40,10 +53,11 @@ def interact():
             pass
     elif request.method == 'GET':
         ## TODO generate questions
+        ## get the chat content
         ## TODO setup json object
         return the_json_object
 
-@app.route("/form-data", method=['GET','POST'])
+@app.route("/form-data", methods=['GET','POST'])
 def form_data():
     """
     Takes the form data as an HTTP Post, 
@@ -52,6 +66,7 @@ def form_data():
     return "test"
 
 if __name__ == '__main__':
+    db.create_all()
     app.run(debug=True)
 
 
