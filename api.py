@@ -3,9 +3,10 @@ import sqlite3
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import datetime 
+import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:////tmp/test.db')
 db = SQLAlchemy(app)
 
 class State(db.Model):
@@ -66,7 +67,11 @@ def form_data():
     return "test"
 
 if __name__ == '__main__':
-    db.create_all()
-    app.run(debug=True)
+    env = os.environ.get('ENV', 'dev')
+    if env == 'prod':
+        app.run(host='0.0.0.0')
+    else:
+        db.create_all()
+        app.run(debug=True)
 
 
