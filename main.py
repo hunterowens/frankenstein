@@ -1,9 +1,7 @@
 import json
 import pythonosc
-## import chatbot
 import argparse
 import math
-import asyncio
 import datetime
 from pythonosc import dispatcher, osc_server, udp_client, osc_message_builder
 import requests
@@ -15,9 +13,10 @@ ip_osc_server='0.0.0.0'
 ## ip_osc = '10.253.0.255'
 port_server = 7007
 port_client = 7007
+api_url = "http://frankenstein.hunterowens.net"
 
 ## this is the dictionary for the OSC meeting/ osc_dispatch
-currentState = {"/state":"sad", "/action":"thinking", "/sentiment": -.5, "/energy": .25, "/focus": -.15 }
+current_state = {"/state":"sad", "/action":"thinking", "/sentiment": -.5, "/energy": .25, "/focus": -.15 }
 
 def send_state_to_ai(current_focus, current_energy, current_sentiment, current_unit, current_words, current_parts):
     """
@@ -47,7 +46,7 @@ def setup():
     """
     requests.get("./reset")
     print("AI Init State Waiting")
-    currentState = get_sentiment_from_ai()
+    current_state = get_sentiment_from_ai()
     return None
 """
 class SimpleOSCClientRedux(udp_client.UDPClient):
@@ -88,7 +87,7 @@ def check_state():
     state=get_sentiment_from_ai()
     return state
 
-def broadcast_state(state=currentState):  
+def broadcast_state(state=current_state):  
     """
     Broadcasts state
     """
@@ -149,9 +148,9 @@ def reset_handler(unused_addr, args):
     """
     ## TODO: Implement
     print("reset handler")
-    currentState.update({'/action': 'start'})
+    current_state.update({'/action': 'start'})
     broadcast_state()
-    currentState.update({'/action': 'expectant'})
+    current_state.update({'/action': 'expectant'})
 
     return
 
@@ -184,7 +183,7 @@ def talking_handler(unused_addr, args):
     """
     print("talking handler")
             
-    currentState.update({'/action': 'talking'})
+    current_state.update({'/action': 'talking'})
     broadcast_state()
 
     ## TODO 
@@ -196,7 +195,7 @@ def silent_handler(unused_addr, args):
     silences the system after TTS
     """
     print("silence handles")
-    currentState.update({'/action': 'expectant'})
+    current_state.update({'/action': 'expectant'})
     broadcast_state()
     ## TODO 
 
@@ -207,7 +206,7 @@ def end_handler(unused_addr, args):
     ends the show
     """
     print("end of show")
-    currentState.update({'/action': 'end'})
+    current_state.update({'/action': 'end'})
     broadcast_state()
     ## TODO 
 
@@ -243,10 +242,6 @@ def osc_server(ip=ip_osc_server, port=port_server):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--ip", default=ip_osc,
-          help="The ip of the OSC server")
-    parser.add_argument("--port", type=int, default=port_server,
-          help="The port the OSC server is listening on")
     parser.add_argument('--server', action='store_true', default=False,
                         help="Run in server mode")
     parser.add_argument('--state', action='store_true',default=False,
