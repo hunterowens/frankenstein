@@ -58,9 +58,6 @@ def catagorize(row):
             else:
                 return "fearful"
 
-def stemming_tokenizer(text):
-    stemmer = PorterStemmer()
-    return [stemmer.stem(w) for w in word_tokenize(text)]
 
 def train(classifier, X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=33)
@@ -72,12 +69,12 @@ def generate_model(data):
     """
     Generates the cataogrization model
     """
+
     le = preprocessing.LabelEncoder()
     le.fit(data['cat'])
     data['target'] = le.transform(data['cat'])
     trial = Pipeline([
-        ('vectorizer', TfidfVectorizer(tokenizer=stemming_tokenizer,
-                                 stop_words=stopwords.words('english') + list(string.punctuation))),
+        ('vectorizer', TfidfVectorizer()), 
         ('classifier', MultinomialNB(alpha=0.5)),
     ])
 

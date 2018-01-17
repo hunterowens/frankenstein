@@ -5,7 +5,6 @@ from flask_sqlalchemy import SQLAlchemy
 import datetime 
 import os
 import pickle
-from sentiment import stemming_tokenizer
 
 app = Flask(__name__)
 
