@@ -70,7 +70,7 @@ def interact():
         return "saved interact"
 
     elif request.method == 'GET':
-        ## Get most recent state info 
+        ## Get most recent state info
         s = State.query.order_by(State.created_date.desc()).first()
         data={}
         data['sentiment'] = s.sentiment
@@ -85,19 +85,19 @@ def interact():
         # start making new text and questions
         if os.path.exists('./saved/faken-markov/' + cat + '.p'):
             f_mark = pickle.load(open('./saved/faken-markov/' + cat + '.p', 'rb'))
-            data['sentence'] = f_mark.make_sentence()
+            data['questions'] = {i: f_mark.make_sentence() for i in range(3)}
         else:
             f_mark = pickle.load(open('./saved/faken-markov/connected.p', 'rb'))
-            data['sentence'] = f_mark.make_sentence()
+            data['questions'] = {i: f_mark.make_sentence() for i in range(3)}
 
         # quetion time
 
         if os.path.exists('./saved/faken-questions/' + cat + '.p'):
             f_mark = pickle.load(open('./saved/faken-questions/' + cat + '.p', 'rb'))
-            data['question'] = f_mark.make_sentence()
+            data['questions'] = {i: f_mark.make_sentence() for i in range(3)}
         else:
             f_mark = pickle.load(open('./saved/faken-questions/guarded.p', 'rb'))
-            data['question'] = f_mark.make_sentence()
+            data['questions'] = {i: f_mark.make_sentence() for i in range(3)}
         return jsonify(data)
 
 @app.route("/interact-surface", methods=['POST'])
