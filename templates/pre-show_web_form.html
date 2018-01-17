@@ -59,7 +59,7 @@
 
             // Define what happens on successful data submission
             XHR.addEventListener("load", function(event) {
-            window.location = 'submitted.html';
+            window.location = './submitted';
             });
 
             XHR.addEventListener("error", function(event) {
@@ -67,7 +67,7 @@
             });
 
             // Set up our request
-            XHR.open("POST", "http://localhost:5000/form-data");
+            XHR.open("POST", "./form-data");
 
             // The data sent is what the user provided in the form
             XHR.send(FD);

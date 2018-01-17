@@ -1,6 +1,6 @@
 import flask
 import sqlite3
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 import datetime 
 import os
@@ -8,7 +8,7 @@ import pickle
 from sentiment.sentiment import stemming_tokenizer
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:////tmp/test.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://hunterowens:@localhost/hunterowens')
 db = SQLAlchemy(app)
 
 class State(db.Model):
@@ -18,6 +18,11 @@ class State(db.Model):
     focus = db.Column(db.Float)
     energy = db.Column(db.Float)
     text = db.Column(db.String(5000))
+
+class FormData(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    created_date = db.Column(db.DateTime, default=datetime.datetime.now())
+    data = db.Column(db.JSON)
 
 @app.route('/')
 def test():
@@ -89,10 +94,25 @@ def interact_surface():
 @app.route("/form-data", methods=['GET','POST'])
 def form_data():
     """
-    Takes the form data as an HTTP Post, 
-    returns the canned hello for http GET sentence. 
+    Form templates
     """
-    return "test"
+    if request.method == 'POST':
+        data = dict(request.form)
+        d = FormData(data=data)
+        db.session.add(d)
+        db.session.commit()
+        ## TODO actually saved
+        return "data saved"
+    else:
+        return render_template('pre-show_web_form.html')
+
+@app.route("/submitted")
+def thanks():
+    """
+    Thank you for completing form
+    """
+    return render_template('submitted.html')
+
 
 if __name__ == '__main__':
     env = os.environ.get('ENV', 'dev')
