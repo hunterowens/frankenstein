@@ -3,9 +3,7 @@ get_ipython().magic('ls ')
 get_ipython().magic('run sentiment.py')
 data = load_data.py
 import pandas as pd
-pd.read_csv('./training_data.csv'
-'
-)
+pd.read_csv('./training_data.csv')
 pd.read_csv('./training_data.csv', skiprows=1)
 data = pd.read_csv('./training_data.csv', skiprows=1)
 get_ipython().magic('ls ')
