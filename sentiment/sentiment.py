@@ -7,17 +7,24 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn import metrics
 
-def load_data():
-    return pd.read_csv('./training_data.csv', skiprows=[1])
-
+from sklearn.cross_validation import train_test_split
+from sklearn.pipeline import Pipeline
+from nltk.corpus import stopwords
+import string
+from nltk.stem import PorterStemmer
+from nltk import word_tokenize
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.cross_validation import train_test_split
+from sklearn import preprocessing
+import pickle
 def catagorize(row):
     """
     apply function to catagorize a set of traing data values into 
     catagories. 
     """
-    sentiment = 0
-    focus = 0 
-    energy_level = 0 ## TODO replace with real
+    sentiment = row['Sentiment']
+    focus = row['Focus'] 
+    energy_level = row['Energy Level']
     if sentiment > 0:
         if focus > 0: # focus outward
             if energy_level > .25:
@@ -49,25 +56,35 @@ def catagorize(row):
             else:
                 return "fearful"
 
+def stemming_tokenizer(text):
+    stemmer = PorterStemmer()
+    return [stemmer.stem(w) for w in word_tokenize(text)]
 
-def generate_model():
-    # Generate counts from text using a vectorizer.  There are other vectorizers available, and lots of options you can set.
-    # This performs our step of computing word counts.
-    vectorizer = CountVectorizer(stop_words='english')
-    train_features = vectorizer.fit_transform([r[0] for r in reviews])
-    test_features = vectorizer.transform([r[0] for r in test])
+def train(classifier, X, y):
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=33)
+    classifier.fit(X_train, y_train)
+    print("Accuracy: %s" % classifier.score(X_test, y_test))
+    return classifier
 
-    # Fit a naive bayes model to the training data.
-    # This will train the model using the word counts we computer, and the existing classifications in the training set.
-    nb = MultinomialNB()
-    nb.fit(train_features, [int(r[1]) for r in reviews])
+def generate_model(data):
+    """
+    Generates the cataogrization model
+    """
+    le = preprocessing.LabelEncoder()
+    le.fit(data['cat'])
+    data['target'] = le.transform(data['cat'])
+    trial = Pipeline([
+        ('vectorizer', TfidfVectorizer(tokenizer=stemming_tokenizer,
+                                 stop_words=stopwords.words('english') + list(string.punctuation))),
+        ('classifier', MultinomialNB(alpha=0.5)),
+    ])
 
-    # Now we can use the model to predict classifications for our test features.
-    predictions = nb.predict(test_features)
-
-    # Compute the error.  It is slightly different from our model because the internals of this process work differently from our implementation.
-    fpr, tpr, thresholds = metrics.roc_curve(actual, predictions, pos_label=1)
-    print("Multinomial naive bayes AUC: {0}".format(metrics.auc(fpr, tpr)))
+    t= train(trial, data['Text'], data['target'])
+    return t, le
 
 if __name__ == '__main__':
-    pass
+    data  = pd.read_csv('./sentiment/training_data.csv', skiprows=[1])
+    data['cat'] = data.apply(catagorize, axis = 1)
+    t, le = generate_model(data)
+    pickle.dump(t, open('saved/cat_model.p', 'wb'))
+    pickle.dump(le, open('saved/classes.p', 'wb'))

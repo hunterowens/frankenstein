@@ -58,6 +58,7 @@ def interact():
             pass
     elif request.method == 'GET':
         ## TODO generate questions
+        
         ## get the chat content
         ## TODO setup json object
         return the_json_object
