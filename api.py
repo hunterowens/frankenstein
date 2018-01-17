@@ -52,10 +52,21 @@ def interact():
     Get requests returns AI state, possible text and next question all as JSON
     """
     if request.method == 'POST':
-            ## TODO: store_content
-            ## TODO: change sentiment/state db
-            new_data(get)
-            pass
+        data = request.get_json(force=True)
+        senti_model = pickle.load(open('./saved/m_senti.p', 'rb'))
+        focus_model = pickle.load(open('./saved/m_focus.p','rb'))
+        energy_model = pickle.load(open('./saved/m_energy.p','rb'))
+        string = data['string']
+        def get_pred(model, string):
+            return model.prdict([string])[0]
+        s = State(sentiment=get_pred(senti_model, string),
+                  focus = get_pred(focus_model, string),
+                  energy = get_pred(energy_model, string),
+                  text = string)
+        db.session.add(s)
+        db.session.commit()
+        return "saved interact"
+
     elif request.method == 'GET':
         ## Get most recent state info 
         s = State.query.order_by(State.created_date.desc()).first()
@@ -68,6 +79,7 @@ def interact():
         le = pickle.load(open('./saved/classes.p','rb'))
         cat_model = pickle.load(open('./saved/cat_model.p','rb'))
         cat = le[cat_model.predict([text])][0]
+        data['state'] = cat
         # start making new text and questions
         if os.path.exists('./saved/faken-markov/' + cat + '.p'):
             f_mark = pickle.load(open('./saved/faken-markov/' + cat + '.p', 'rb'))

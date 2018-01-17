@@ -43,7 +43,10 @@ def get_sentiment_from_ai():
     Gets state from AI, transforms into sentiment
     """
     print("Getting State from AI")
-    return {"/state":"sad", "/action":"thinking", "/sentiment": -.5, "/energy": .25, "/focus": -.15 } 
+    r = requests.get(api_url + 'interact')
+    data = json.dumps(r.data)
+    print(data)
+    return data #{"/state":"sad", "/action":"thinking", "/sentiment": -.5, "/energy": .25, "/focus": -.15 } 
 
 
 def setup():
