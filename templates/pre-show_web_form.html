@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=.5"> 
+        <style type="text/css"> 
+        fieldset {
+            border: none;
+            padding: 0;
+            margin-left: 50px;
+            margin-top: 50px;
+            margin-right: 50px;
+        }
+            
+        body{
+            background-color: #F2E5FF
+        }
+            
+        .boxed {
+            margin-top: -150px;
+            margin-left: 30px;
+            margin-right: 30px;
+            margin-bottom: 100px;
+            border: 1px #B3A4C2;
+            padding: 10px;
+            background-color: white;
+        }
+            
+        .bar {
+            background-color: #59169E;
+            padding: 100px;
+        }
+        textarea {
+            font-size: 16px;
+        }
+        </style>
+    </head>
+    
+    
+    <script>
+        function sendData(event) {
+            event.preventDefault();
+
+            const form = document.getElementById("survey");
+            const XHR = new XMLHttpRequest();
+
+            // Bind the FormData object and the form element
+            const FD = new FormData(form);
+
+            // Define what happens on successful data submission
+            XHR.addEventListener("load", function(event) {
+            window.location = 'submitted.html';
+            });
+
+            XHR.addEventListener("error", function(event) {
+            alert('Oops! Something went wrong.');
+            });
+
+            // Set up our request
+            XHR.open("POST", "http://localhost:5000/form-data");
+
+            // The data sent is what the user provided in the form
+            XHR.send(FD);
+        }
+    </script>
+    
+    <header>
+        <div class="bar">
+            <h2></h2>
+        </div>
+    </header>
+    <div class="container">
+    <div class="boxed">
+    <form id = "survey">
+        <font face="HelveticaNeue-light" size = 3>
+        
+        <fieldset id="title">
+            <font size = 8>
+            <b>How human are you?</b>
+            </font>
+        </fieldset>
+        
+        <fieldset id="required">
+            <font color = #FF0000>
+            <font size = 5 color = #FF0000>*</font>Required
+            </font>
+        </fieldset>
+    
+        <fieldset id="question2">
+            <font face="HelveticaNeue-light" size = 3>
+            <b>Choose the most interesting question.<font size = 5 color = #FF0000>*</font></b><br><br>
+
+            <!--vvvvvvvvvvvvvvvvvvvvvvvvv-->
+            <!-- ADD MORE QUESTIONS BELOW-->
+            <!--vvvvvvvvvvvvvvvvvvvvvvvvv-->
+
+            <select name="question">
+                <option value="" disabled="disabled" selected="selected">Please select a name</option>
+                <option value="Why do you have borders?">Why do you have borders?</option>
+                <option value="Why have you destroyed the planet?">Why have you destroyed the planet?</option>
+                <option value="Why do humans kill each other?">Why do humans kill each other?</option>
+                <option value="Why do humans want other humans to like them?">Why do humans want other humans to like them?</option>
+                <option value="What is the difference between liking and loving?">What is the difference between liking and loving?</option>
+                <option value="What are you afraid of?">What are you afraid of?</option>
+                <option value="Why do humans eat for fun?">Why do humans eat for fun?</option>
+                <option value="Why should I trust you?">Why should I trust you?</option>
+                <option value="Why do humans keep pets?">Why do humans keep pets?</option>
+                <option value="What does rejection feel like?">What does rejection feel like?</option>
+                <option value="What is the most 'human' experience you've had?">What is the most "human" experience you've had?</option>
+            </select>
+            </font>
+        </fieldset>
+    
+        <fieldset id="question3">
+            <b>What emotions does this question bring up for you?<font size = 5 color = #FF0000>*</font></b><br><br>
+            <textarea rows="4" cols="50" name="emotions"></textarea>
+        </fieldset>
+
+        <fieldset id="question4">
+            <b>Does this question bring up any memories?<font size = 5 color = #FF0000>*</font></b><br><br>
+            <span style="font-weight:normal;">
+            <input type="radio" name="hasMemory" value="true">Yes<br>
+            <input type="radio" name="hasMemory" value="false">No
+            </span>
+        </fieldset>
+
+        <fieldset id="question5">
+            <b>If yes, what memory (or memories)?</b><br><br>
+            <textarea rows="4" cols="50" name="memory"></textarea>
+        </fieldset>
+
+        <fieldset id="question6">
+
+            <table><font face="HelveticaNeue-light" size = 3>
+                <tr>
+                    <td><b>How personal is this memory to you?<font size = 5 color = #FF0000>*</font></b></td>
+                </tr>
+                <tr></tr>
+                <tr>
+                    <td></td>
+                    <td>Yes</td>
+                    <td></td>
+                    <td>No</td>
+                    <td></td>
+                    <td>I don't know</td>
+                </tr>
+                <tr>
+                    <td><br>I would never tell another person<br>about this.</td>
+                    <td><input type="radio" name="r1" value="yes"></td>
+                    <td><font color = #ffffff>--</font></td>
+                    <td><input type="radio" name="r1" value="no"></td>
+                    <td><font color = #ffffff>--</font></td>
+                    <td><input type="radio" name="r1" value="idk"></td>
+                </tr>
+                <tr>
+                    <td><br>I would only feel comfortable telling<br>people I’m close to.</td>
+                    <td><input type="radio" name="r2" value="yes"></td>
+                    <td> </td>
+                    <td><input type="radio" name="r2" value="no"></td>
+                    <td> </td>
+                    <td><input type="radio" name="r2" value="idk"></td>
+                </tr>
+                <tr>
+                    <td><br>I feel comfortable talking about it<br>with people who I don’t know well.</td>
+                    <td><input type="radio" name="r3" value="yes"></td>
+                    <td> </td>
+                    <td><input type="radio" name="r3" value="no"></td>
+                    <td> </td>
+                    <td><input type="radio" name="r3" value="idk"></td>
+                </tr>
+                <tr>
+                    <td><br>I would share this on social media.</td>
+                    <td><input type="radio" name="r4" value="yes"></td>
+                    <td> </td>
+                    <td><input type="radio" name="r4" value="no"></td>
+                    <td> </td>
+                    <td><input type="radio" name="r4" value="idk"></td>
+                </tr>
+                <tr>
+                    <td><br>I would share this anonymously with<br>an AI to help it learn about humanity.</td>
+                    <td><input type="radio" name="r5" value="yes"></td>
+                    <td> </td>
+                    <td><input type="radio" name="r5" value="no"></td>
+                    <td> </td>
+                    <td><input type="radio" name="r5" value="idk"></td>
+                </tr>
+            </font></table>
+        </fieldset>
+    
+        <fieldset id="question7">
+            <b>Does this question bring up any hopes?<font size = 5 color = #FF0000>*</font></b><br><br>
+            <span style="font-weight:normal;">
+            <input type="radio" name="hasHope" value="true">Yes<br>
+            <input type="radio" name="hasHope" value="false">No<br><br>
+            </span>
+        </fieldset>
+
+        <fieldset id="question8">
+            <b>If yes, what hopes does it surface?</b><br><br>
+            <textarea rows="4" cols="50" name="hopes"></textarea><br><br>
+        </fieldset>
+
+        <fieldset id="question9">
+            <b>Does this question relate to any of your fears?</b><br><br>
+            <span style="font-weight:normal;">
+            <input type="radio" name="hasFears" value="true">Yes<br>
+            <input type="radio" name="hasFears" value="false">No<br><br>
+            </span>
+        </fieldset>
+
+        <fieldset id="question10">
+            <b>If yes, what fears does it relate to?</b><br><br>
+            <textarea rows="4" cols="50" name="fears"></textarea>
+        </fieldset>
+
+        <fieldset id="question11">
+            <b>Color of your “How human are you?” card.</b><br><br>
+            <span style="font-weight:normal;">
+            <input type="radio" name="color" value="gray">Gray<br>
+            <input type="radio" name="color" value="red">Red<br>
+            <input type="radio" name="color" value="blue">Blue<br>
+            <input type="radio" name="color" value="green">Green
+            </span>
+        </fieldset>
+
+        <fieldset id="question1">
+            <b>What's your first name?</b><br><br>
+            <input type="text" name="name">
+        </fieldset>
+
+        <fieldset>
+        <button onclick="sendData(event);" style="font-size:15pt;color:white;background-color:#008CFF;border:1px solid #008CFF;padding:10px;face:HelveticaNeue-light;font-weight:bold"> Submit </button>
+        <font color = #ffffff>------</font>
+        <button onclick="location.reload();" style="font-size:10pt;color:white;background-color:#737373;border:1px solid #737373;padding:10px;face:HelveticaNeue-light;font-weight:bold"> Refresh </button>
+        </fieldset>
+        </font>
+    </form>
+    </div>
+    </div>
+</html>
