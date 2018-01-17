@@ -13,23 +13,29 @@ ip_osc_server='0.0.0.0'
 ## ip_osc = '10.253.0.255'
 port_server = 7007
 port_client = 7007
-api_url = "http://frankenstein.hunterowens.net"
+api_url = "http://frankenstein.hunterowens.net/"
 
 ## this is the dictionary for the OSC meeting/ osc_dispatch
 current_state = {"/state":"sad", "/action":"thinking", "/sentiment": -.5, "/energy": .25, "/focus": -.15 }
 
-def send_state_to_ai(current_focus, current_energy, current_sentiment, current_unit, current_words, current_parts):
+def send_surface_state_to_ai(current_focus, current_energy, current_sentiment, 
+                             current_unit, current_words, current_parts):
     """
     sents the state / new talking  as JSON to the AI
     focus, energy, and sentiment are floats; unit is a string; words and parts are arrays of strings where the indexes correspond, so words[0] goes with parts[0]
     """
     
     print("AI State is: {0} focus, {1} energy, and {2} sentiment".format(current_focus, current_energy, current_sentiment))
-    
-    ## TODO: Implement read 
-    ## TODO: Implement sent to AI 
-    pass
-
+    data = {
+            'current_focus': current_focus,
+            'current_energy': current_energy,
+            'current_sentiment': current_sentiment,
+            'current_unit': current_unit,
+            'current_words': current_words,
+            'current_parts': current_parts
+            } 
+    r = requests.post(api_url + 'interact-surface',data = data)
+    return r
 def get_sentiment_from_ai():
     ## TODO implement get methods
     ## TODO turn sentiments into state
@@ -44,7 +50,7 @@ def setup():
     """
     sets AI in waiting state
     """
-    requests.get("./reset")
+    requests.get(api_url + "reset")
     print("AI Init State Waiting")
     current_state = get_sentiment_from_ai()
     return None
