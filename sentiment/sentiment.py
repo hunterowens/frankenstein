@@ -6,7 +6,7 @@ import pandas as pd
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn import metrics
-
+import os
 from sklearn.cross_validation import train_test_split
 from sklearn.pipeline import Pipeline
 from nltk.corpus import stopwords
@@ -17,6 +17,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cross_validation import train_test_split
 from sklearn import preprocessing
 import pickle
+import markovify
+
 def catagorize(row):
     """
     apply function to catagorize a set of traing data values into 
@@ -82,9 +84,49 @@ def generate_model(data):
     t= train(trial, data['Text'], data['target'])
     return t, le
 
+def gen_markov(fp,lines):
+    """
+    Generates a markov model and saves to /saved/
+    """
+    print('making ', fp)
+    try:
+        m = markovify.Text("\n".join(lines))
+    except KeyError:
+        print("Couldn't make model for ", fp)
+        return 
+    pickle.dump(m, open(fp, 'wb'))
+    print('saved ', fp)
+    return m
+
 if __name__ == '__main__':
     data  = pd.read_csv('./sentiment/training_data.csv', skiprows=[1])
     data['cat'] = data.apply(catagorize, axis = 1)
     t, le = generate_model(data)
     pickle.dump(t, open('saved/cat_model.p', 'wb'))
-    pickle.dump(le, open('saved/classes.p', 'wb'))
+    pickle.dump(le.classes_, open('saved/classes.p', 'wb'))
+    # Fakenstein Markov
+    with open('./data/fakenstein.txt') as f:
+        text = f.read()
+    lines = text.split('\n')
+    if not os.path.exists('./saved/cat_data.p'):
+        cat_data = {k: [] for k in le.classes_}
+        from tqdm import tqdm
+        for line in tqdm(lines):
+            cat = le.classes_[t.predict([line])][0]
+            cat_data[cat].append(line)
+        pickle.dump(cat_data, open('./saved/cat_data.p', 'wb')) 
+    else:
+        cat_data = pickle.load(open('./saved/cat_data.p','rb'))
+    for key in cat_data.keys():
+        gen_markov('./saved/faken-markov/' + key + '.p', cat_data[key])
+    # Questions Markov
+    questions = pd.read_csv('./questions.csv', header=None)
+    cat_questions = {k: [] for k in le.classes_}
+    for q in questions[0].tolist():
+        cat = le.classes_[t.predict([q])][0]
+        cat_questions[cat].append(q)
+    for key in cat_questions.keys():
+        gen_markov('./saved/faken-questions/' + key + '.p', cat_questions[key])
+
+    
+
