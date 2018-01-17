@@ -2,10 +2,13 @@ requests
 python-osc
 flask
 tensorflow
+nltk
 markovify
 numpy
 gunicorn
 pandas
+scikit-learn
 sqlalchemy
+scipy
 psycopg2
 Flask-SQLAlchemy

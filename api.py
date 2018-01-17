@@ -5,9 +5,12 @@ from flask_sqlalchemy import SQLAlchemy
 import datetime 
 import os
 import pickle
-from sentiment.sentiment import stemming_tokenizer
+from sentiment import stemming_tokenizer
 
 app = Flask(__name__)
+
+print("Database URL: ", os.environ.get('DATABASE_URL', 'postgresql://hunterowens:@localhost/hunterowens'))
+
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://hunterowens:@localhost/hunterowens')
 db = SQLAlchemy(app)
 
