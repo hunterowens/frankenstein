@@ -8,6 +8,7 @@ import requests
 from collections import OrderedDict
 
 ## added variables to change the ip and port easily
+## testing if Git works with ST
 
 ip_osc = '192.168.1.255'
 ##ip_osc = '192.168.0.255'
