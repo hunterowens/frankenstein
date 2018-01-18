@@ -84,6 +84,7 @@ def interact():
         cat_model = pickle.load(open('./saved/cat_model.p','rb'))
         cat = le[cat_model.predict([text])][0]
         data['state'] = cat
+        data['text'] = text
         # start making new text and questions
         if os.path.exists('./saved/faken-markov/' + cat + '.p'):
             f_mark = pickle.load(open('./saved/faken-markov/' + cat + '.p', 'rb'))
@@ -105,8 +106,14 @@ def interact():
 
 @app.route("/interact-surface", methods=['POST'])
 def interact_surface():
-    content = request.get_json(silent=True)
-
+    data = request.get_json(force=True)
+    s = State(sentiment=data['sentiment'],
+              focus = data['focus'],
+              energy = data['energy'],
+              text = "surface text")
+    db.session.add(s)
+    db.session.commit()
+    return "surface data saved"
 
 @app.route("/form-data", methods=['GET','POST'])
 def form_data():
