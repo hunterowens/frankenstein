@@ -1,41 +1,39 @@
 import json
 import pythonosc
+## import chatbot
 import argparse
 import math
+import asyncio
 import datetime
 from pythonosc import dispatcher, osc_server, udp_client, osc_message_builder
 import requests
 
 
 ## added variables to change the ip and port easily
+
 ip_osc = '192.168.1.255'
+##ip_osc = '192.168.0.255'
 ip_osc_server='0.0.0.0'
 ## ip_osc = '10.253.0.255'
 port_server = 7007
 port_client = 7007
-api_url = "http://frankenstein.hunterowens.net/"
+port_client_editor = 7008
 
 ## this is the dictionary for the OSC meeting/ osc_dispatch
-current_state = {"/state":"sad", "/action":"thinking", "/sentiment": -.5, "/energy": .25, "/focus": -.15 }
+currentState = {"/state":"happy", "/action":"talking", "/sentiment": -0.5, "/energy": 0.25, "/focus": -0.5 }
 
-def send_surface_state_to_ai(current_focus, current_energy, current_sentiment, 
-                             current_unit, current_words, current_parts):
+def send_state_to_ai(current_focus, current_energy, current_sentiment, current_unit, current_words, current_parts):
     """
     sents the state / new talking  as JSON to the AI
     focus, energy, and sentiment are floats; unit is a string; words and parts are arrays of strings where the indexes correspond, so words[0] goes with parts[0]
     """
     
     print("AI State is: {0} focus, {1} energy, and {2} sentiment".format(current_focus, current_energy, current_sentiment))
-    data = {
-            'current_focus': current_focus,
-            'current_energy': current_energy,
-            'current_sentiment': current_sentiment,
-            'current_unit': current_unit,
-            'current_words': current_words,
-            'current_parts': current_parts
-            } 
-    r = requests.post(api_url + 'interact-surface',data = data)
-    return r
+    
+    ## TODO: Implement read 
+    ## TODO: Implement sent to AI 
+    pass
+
 def get_sentiment_from_ai():
     ## TODO implement get methods
     ## TODO turn sentiments into state
@@ -43,19 +41,16 @@ def get_sentiment_from_ai():
     Gets state from AI, transforms into sentiment
     """
     print("Getting State from AI")
-    r = requests.get(api_url + 'interact')
-    data = json.dumps(r.data)
-    print(data)
-    return data #{"/state":"sad", "/action":"thinking", "/sentiment": -.5, "/energy": .25, "/focus": -.15 } 
+    return {currentState} 
 
 
 def setup():
     """
     sets AI in waiting state
     """
-    requests.get(api_url + "reset")
+    requests.get("./reset")
     print("AI Init State Waiting")
-    current_state = get_sentiment_from_ai()
+    currentState = get_sentiment_from_ai()
     return None
 """
 class SimpleOSCClientRedux(udp_client.UDPClient):
@@ -94,9 +89,9 @@ def check_state():
     """
     
     state=get_sentiment_from_ai()
-    return state
+    return 
 
-def broadcast_state(state=current_state):  
+def broadcast_state(state=currentState):  
     """
     Broadcasts state
     """
@@ -112,22 +107,20 @@ def broadcast_text(AItext):
     send a fixed piece of text from the AI
     """
     
-    osc_dispatch('/textnoquest', AItext)
-    
+    osc_dispatch('/textnoquest', AItext, port=port_client_editor)
+    print("Updating State")
+    broadcast_state()
     return
 
 def broadcast_questions():
     """
     broadcast the questions ## verified with web app
     """
-    questions = {"/text1": "Why is this night different from all other nights?",
-                 "/text2": "Why do we eat Matzah?",
-                 "/text3": "Why do we recline?",
-                 "/text4": "What about those damn bitter herbs",
-                 "/text0": "statements statements statements"}
-    for k,v in questions.items():
-        print("Sending questions to editor")
-        osc_dispatch(k,v)
+    questions = '{"text0": "How are you?", "text1": "Are you well?", "text2": "Who knows?", "text3": "Why not?"}'
+    print("Sending questions to editor")
+    osc_dispatch('/textques', questions, port=port_client_editor)
+    print("Updating State")
+    broadcast_state()
     return
 
 def surface_handler(unused_addr, args):
@@ -136,6 +129,7 @@ def surface_handler(unused_addr, args):
     Surface argument to be OSC String Formatted as followed
     "sentiment: value; focus: value; energy: value"
     """
+    print("Got Surface Message")
     try: 
         vals = json.loads(args)
         ## surfaces need to be directed to pi, look in js/machineConfiguration.json
@@ -146,6 +140,7 @@ def surface_handler(unused_addr, args):
     current_focus = vals['focus']
     current_energy = vals['energy']
     current_unit = vals['unit']
+    print("From Surface Unit {0}".format(current_unit))
     current_words = vals['words']
     current_parts = vals['parts']
     send_state_to_ai(current_focus, current_energy, current_sentiment, current_unit, current_words, current_parts)
@@ -157,9 +152,9 @@ def reset_handler(unused_addr, args):
     """
     ## TODO: Implement
     print("reset handler")
-    current_state.update({'/action': 'start'})
+    currentState.update({'/action': 'start'})
     broadcast_state()
-    current_state.update({'/action': 'expectant'})
+    currentState.update({'/action': 'expectant'})
 
     return
 
@@ -169,6 +164,7 @@ def answer_handler(unused_addr, args):
     """
     print("send answer to ai")
     
+    currentState.update({'/action': 'thinking'})
     broadcast_state()
 
     ## TODO 
@@ -192,7 +188,7 @@ def talking_handler(unused_addr, args):
     """
     print("talking handler")
             
-    current_state.update({'/action': 'talking'})
+    currentState.update({'/action': 'talking'})
     broadcast_state()
 
     ## TODO 
@@ -204,7 +200,7 @@ def silent_handler(unused_addr, args):
     silences the system after TTS
     """
     print("silence handles")
-    current_state.update({'/action': 'expectant'})
+    currentState.update({'/action': 'expectant'})
     broadcast_state()
     ## TODO 
 
@@ -215,7 +211,7 @@ def end_handler(unused_addr, args):
     ends the show
     """
     print("end of show")
-    current_state.update({'/action': 'end'})
+    currentState.update({'/action': 'end'})
     broadcast_state()
     ## TODO 
 
@@ -251,6 +247,10 @@ def osc_server(ip=ip_osc_server, port=port_server):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument("--ip", default=ip_osc,
+          help="The ip of the OSC server")
+    parser.add_argument("--port", type=int, default=port_server,
+          help="The port the OSC server is listening on")
     parser.add_argument('--server', action='store_true', default=False,
                         help="Run in server mode")
     parser.add_argument('--state', action='store_true',default=False,
@@ -274,8 +274,8 @@ if __name__ == '__main__':
         osc_server()
     elif args.state:
         print("Sending state")
-        stateSend = check_state()
-        broadcast_state(stateSend)
+        ##check_state()
+        broadcast_state()
     elif args.text:
         print("Sending Text")
         broadcast_questions()
@@ -306,4 +306,4 @@ if __name__ == '__main__':
     elif args.surface:
         print("Sending Surface Message")
         ## foo = json.loads('{"number": 1.0, "other": 4.3}')
-        osc_dispatch('/surface-sentiments', '{"sentiment": 0.15, "focus": 0.65, "energy": -0.3, "unit": "red", "words": ["inspired", "anxious", "understanding"], "parts": ["hand", "eye", "head"]}')
+        osc_dispatch('/surface-sentiments', '{"sentiment": 0.15, "focus": 0.65, "energy": -0.3, "unit": "test", "words": ["inspired", "anxious", "understanding"], "parts": ["hand", "eye", "head"]}')
