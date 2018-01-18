@@ -224,6 +224,16 @@ def question_handler(unused_addr, args):
     
     return None
 
+def thinking_handler(unsused_addr, args):
+    """
+    shuts the machine up
+    """
+    print('thinking handler')
+    current_state.update({'/actions': 'thinking'})
+    broadcast_state()
+    
+    return None   
+
 def silent_handler(unused_addr, args):
     """
     silences the system after TTS
@@ -288,6 +298,7 @@ def osc_server(ip=ip_osc_server, port=port_server):
     dispatch.map("/talking", talking_handler)
     dispatch.map("/end", end_handler)
     dispatch.map("/question", question_handler)
+    dispatch.map("/thinking", thinking_handler)
     dispatch.map("/start-surface", surfacestart_handler)
     
     ## TODO: Talk State - > triger from AI to get new words/questions etc from teh AI on the server and then broadcast 
@@ -314,6 +325,10 @@ if __name__ == '__main__':
     parser.add_argument('--refresh', action='store_true', default=False, help="refresh questions")
     parser.add_argument('--end', action='store_true', default=False, help="end experience")
     parser.add_argument('--question', action='store_true', default=False, help='test question handler')
+    parser.add_argument('--thinking', action='store_true', default=False, help='test thinking handler')
+    parser.add_argument('--happy', action='store_true', default=False, help="set to happy")
+    parser.add_argument('--tolerant', action='store_true', default=False, help="set to tolerant")
+    parser.add_argument('--guarded', action='store_true', default=False, help="set to guarded")
     parser.add_argument('--surface', action='store_true', default=False, help="send dummy surface data")
     parser.add_argument('--startsurface', action='store_true', default=False, help="test surface start")
     parser.add_argument('--resetsurface', action='store_true', default=False, help="test surface reset")
@@ -348,6 +363,18 @@ if __name__ == '__main__':
     elif args.question:
         print("Sending a question")
         osc_dispatch('/question', 1)
+    elif args.thinking:
+        print("Setting thinking")
+        osc_dispatch('/thinking', 1)
+    elif args.happy:
+        print("Set state to happy")
+        current_state.update({'/state': 'happy'})
+    elif args.tolerant:
+        print("Set state to tolerant")
+        current_state.update({'/state': 'tolerant'})
+    elif args.guarded:
+        print("Set state to guarded")
+        current_state.update({'/state': 'guarded'})
     elif args.startsurface:
         print("Telling surfaces to turn on")
         osc_dispatch('/start-surface', 1)
