@@ -59,16 +59,18 @@ def interact():
         focus_model = pickle.load(open('./saved/m_focus.p','rb'))
         energy_model = pickle.load(open('./saved/m_energy.p','rb'))
         string = data['string']
+        print(data)
+        print(string)
         def get_pred(model, string):
-            return model.prdict([string])[0]
+            return model.predict([string])[0]
         s = State(sentiment=get_pred(senti_model, string),
                   focus = get_pred(focus_model, string),
                   energy = get_pred(energy_model, string),
                   text = string)
         db.session.add(s)
         db.session.commit()
+        print('saved ', s)
         return "saved interact"
-
     elif request.method == 'GET':
         ## Get most recent state info
         s = State.query.order_by(State.created_date.desc()).first()
