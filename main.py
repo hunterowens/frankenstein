@@ -304,9 +304,9 @@ def osc_server(ip=ip_osc_server, port=port_server):
     dispatch.map("/end", end_handler)
     dispatch.map("/question", question_handler)
     dispatch.map("/thinking", thinking_handler)
-    dispatch.map("/start-surface", surfacestart_handler)
-    dispatch.map("/close-surface"), surfacestop_handler)
-    dispatch.map("/reset-surface"), surfacereset_handler)
+    dispatch.map("/startsurface", surfacestart_handler)
+    dispatch.map("/closesurface", surfacestop_handler)
+    dispatch.map("/resetsurface", surfacereset_handler)
     
     ## TODO: Talk State - > triger from AI to get new words/questions etc from teh AI on the server and then broadcast 
     
@@ -387,10 +387,10 @@ if __name__ == '__main__':
         print(current_state)
     elif args.startsurface:
         print("Telling surfaces to turn on")
-        osc_dispatch('/start-surface', 1)
+        osc_dispatch('/startsurface', 1)
     elif args.resetsurface:
         print("Telling surfaces to start over")
-        osc_dispatch('/reset-surface', 1)
+        osc_dispatch('/resetsurface', 1)
     elif args.surface:
         print("Sending Surface Message")
         ## foo = json.loads('{"number": 1.0, "other": 4.3}')
