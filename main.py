@@ -53,7 +53,7 @@ def send_answer_to_ai(answer):
     return r
 # this is the dictionary for the OSC meeting/ osc_dispatch
 current_state = OrderedDict()
-current_state["/state"] = "happy"
+current_state["/state"] = "guarded"
 current_state["/action"] = "start"
 current_state["/sentiment"] = 0.0
 current_state["/energy"] = 0.0
@@ -300,7 +300,10 @@ def osc_server(ip=ip_osc_server, port=port_server):
     dispatch.map("/question", question_handler)
     dispatch.map("/thinking", thinking_handler)
     dispatch.map("/start-surface", surfacestart_handler)
-    
+    dispatch.map("/reset-surface", surfacereset_handler)
+    dispatch.map("/close-surface", surfacestop_handler)
+
+
     ## TODO: Talk State - > triger from AI to get new words/questions etc from teh AI on the server and then broadcast 
     
     server = pythonosc.osc_server.ThreadingOSCUDPServer(
