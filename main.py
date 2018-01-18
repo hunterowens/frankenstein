@@ -1,13 +1,11 @@
 import json
 import pythonosc
-## import chatbot
 import argparse
 import math
-import asyncio
 import datetime
 from pythonosc import dispatcher, osc_server, udp_client, osc_message_builder
 import requests
-
+from collections import OrderedDict
 
 ## added variables to change the ip and port easily
 
@@ -18,56 +16,79 @@ ip_osc_server='0.0.0.0'
 port_server = 7007
 port_client = 7007
 port_client_editor = 7008
+api_url = "http://frankenstein.hunterowens.net/"
+## Some comments
 
-## this is the dictionary for the OSC meeting/ osc_dispatch
-currentState = {"/state":"happy", "/action":"talking", "/sentiment": -0.5, "/energy": 0.25, "/focus": -0.5 }
-##currentState = {"/state":"tolerant", "/action":"talking", "/sentiment": -0.5, "/energy": 0.25, "/focus": -0.5 }
-##currentState = {"/state":"guarded", "/action":"talking", "/sentiment": -0.5, "/energy": 0.25, "/focus": -0.5 }
 
-def send_state_to_ai(current_focus, current_energy, current_sentiment, current_unit, current_words, current_parts):
+
+def send_surface_state_to_ai(sentiment, energy, focus):
     """
     sents the state / new talking  as JSON to the AI
     focus, energy, and sentiment are floats; unit is a string; words and parts are arrays of strings where the indexes correspond, so words[0] goes with parts[0]
     """
     
     print("AI State is: {0} focus, {1} energy, and {2} sentiment".format(current_focus, current_energy, current_sentiment))
-    
-    ## TODO: Implement read 
-    ## TODO: Implement sent to AI 
-    pass
+    data = {
+            'focus': focus,
+            'sentiment': sentiment,
+            'energy': energy
+            } 
+    r = requests.post(api_url + 'interact-surface', data = data)
+    return r
+
+
+def send_answer_to_ai(answer):
+    """
+    Sents an answer to the AI 
+    """
+    print("Answer sending ", answer)
+
+    headers = {
+        "content-type": "application/json"
+    }
+
+    r = requests.post(api_url + 'interact', 
+                      json={'string': answer},
+                      headers=headers)
+    return r
+# this is the dictionary for the OSC meeting/ osc_dispatch
+current_state = OrderedDict()
+current_state["/state"] = "connected"
+current_state["/action"] = "start"
+current_state["/sentiment"] = 0.0
+current_state["/energy"] = 0.0
+current_state["/focus"] = 0.0 
 
 def get_sentiment_from_ai():
-    ## TODO implement get methods
-    ## TODO turn sentiments into state
     """
-    Gets state from AI, transforms into sentiment
+    Gets state from AI, transforms into sentiment.
+
+    Returns a string of JSON
     """
-    print("Getting State from AI")
-    return {currentState} 
+    print("Getting Data from AI")
+    r = requests.get(api_url + 'interact')
+    print(r.status_code)
+    print(r)
+    data = r.json()
+    current_state['/state'] = data['state']
+    current_state['/sentiment'] = data['sentiment']
+    current_state['/focus'] = data['focus']
+    current_state['/energy'] = data['energy']
+    print('state updated')
+    return data
+    
+
 
 
 def setup():
     """
     sets AI in waiting state
     """
-    requests.get("./reset")
+    r = requests.get(api_url + "reset")
     print("AI Init State Waiting")
-    currentState = get_sentiment_from_ai()
+    current_state = get_sentiment_from_ai()
     return None
-"""
-class SimpleOSCClientRedux(udp_client.UDPClient):
 
-    def send_message(self, address, value):
-        builder = osc_message_builder.OscMessageBuilder(address=address)
-        if not isinstance(value, Iterable) or isinstance(value, (str, bytes)):
-            values = [value]
-        else:
-            values = value
-        for val in values:
-            builder.add_arg(val)
-        msg = builder.build()
-        self.send(msg)
-"""
 
 def osc_dispatch(addr, msg, ip=ip_osc, port=port_client):
     """
@@ -76,7 +97,7 @@ def osc_dispatch(addr, msg, ip=ip_osc, port=port_client):
     client = udp_client.UDPClient(ip, port,1)
     ## SimpleOSCClientRedux(client)
     ## client._sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-    print("Sent {0} with {1}".format(addr, msg))
+    print("Sent {0} with {1} to {2} at {3}".format(addr, msg, ip, port))
     
     builder = osc_message_builder.OscMessageBuilder(address=addr)
     builder.add_arg(msg)
@@ -85,24 +106,19 @@ def osc_dispatch(addr, msg, ip=ip_osc, port=port_client):
     ## print(client(addr, msg))
     return None
 
-def check_state():
-    """
-    gets state from AI
-    """
-    
-    state=get_sentiment_from_ai()
-    return 
-
-def broadcast_state(state=currentState):  
+def broadcast_state(state=current_state, ip=ip_osc, port=port_client):  
     """
     Broadcasts state
     """
     print("Called Broadcast State Function")
-    ## TODO: Run in infinite loop version 
+    client = udp_client.UDPClient(ip, port,1)
+    builder = osc_message_builder.OscMessageBuilder(address='/status')
     for k,v in state.items():
-        print("Dispatching {0} with value {1}".format(k,v))
-        osc_dispatch(k,v)
-    return
+        builder.add_arg(v)
+
+    client.send(builder.build()) 
+    print("sent {0} to {1}:{2}".format(builder.args, ip, port))
+    return None
 
 def broadcast_text(AItext):
     """
@@ -112,18 +128,19 @@ def broadcast_text(AItext):
     osc_dispatch('/textnoquest', AItext, port=port_client_editor)
     print("Updating State")
     broadcast_state()
-    return
+    return None
 
-def broadcast_questions():
+def send_data_to_line_editor():
     """
-    broadcast the questions ## verified with web app
+    Sends data for display to Line Editor
     """
-    questions = '{"text0": "How are you?", "text1": "Are you well?", "text2": "Who knows?", "text3": "Why not?"}'
+    data = get_sentiment_from_ai()
+    questions = json.dumps({"text" + str(k): v for k, v in data['questions'].items()})
+
     print("Sending questions to editor")
     osc_dispatch('/textques', questions, port=port_client_editor)
-    print("Updating State")
     broadcast_state()
-    return
+    return None
 
 def surface_handler(unused_addr, args):
     """
@@ -154,47 +171,35 @@ def reset_handler(unused_addr, args):
     """
     ## TODO: Implement
     print("reset handler")
-    currentState.update({'/action': 'start'})
+    setup()
+    current_state.update({'/action': 'start'})
     broadcast_state()
-    currentState.update({'/action': 'expectant'})
+    current_state.update({'/action': 'expectant'})
 
-    return
+    return None
 
 def answer_handler(unused_addr, args):
     """
     Starts answering
     """
     print("send answer to ai")
-    
-    currentState.update({'/action': 'thinking'})
+    send_answer_to_ai(args)
+    current_state.update({'/action': 'thinking'})
     broadcast_state()
 
-    ## TODO 
-
-    return
+    ## Call line editor
+    send_data_to_line_editor()
+    return None
 
 def refresh_handler(unused_addr, args):
     """
     Refresh text
     """
     print("Refreshing text")
-    broadcast_questions() 
-    ## TODO 
+    send_data_to_line_editor()
 
-    return
+    return None
 
-def thinking_handler(unused_addr, args):
-    """
-    Starts thinking
-    """
-    print("thinking handler")
-            
-    currentState.update({'/action': 'thinking'})
-    broadcast_state()
-
-    ## TODO 
-
-    return
 
 def talking_handler(unused_addr, args):
     """
@@ -202,41 +207,64 @@ def talking_handler(unused_addr, args):
     """
     print("talking handler")
             
-    currentState.update({'/action': 'talking'})
+    current_state.update({'/action': 'talking'})
     broadcast_state()
 
-    ## TODO 
+    send_data_to_line_editor() 
+    
+    return None
 
-    return
+def question_handler(unused_addr, args):
+    """
+    shuts the machine up
+    """
+    print('question handler')
+    current_state.update({'/actions': 'question'})
+    broadcast_state()
+    
+    return None
 
 def silent_handler(unused_addr, args):
     """
     silences the system after TTS
     """
     print("silence handles")
-    currentState.update({'/action': 'expectant'})
+    current_state.update({'/action': 'expectant'})
     broadcast_state()
-    ## TODO 
 
-    return
+    return None
 
-def question_handler(unused_addr, args):
+def surfacestart_handler(unused_addr, args):
     """
-    sends the final questions
+    blasts start to the surfaces
+    """
+    print("Blasting Start to the Surfaces")
+    osc_dispatch('/start-surface', 1)
+
+def surfacereset_handler(unused_addr, args):
+    """
+    blasts reset to surface
     """
 
-    print("Question Handler")
-    currentState.update({'/action': 'question'})
-    broadcast_state()
+    print("Blasting Reset to the Surface")
+    osc_dispatch('/reset-surface', 1)
+
+def surfacestop_handler(unused_addr, args):
+    """
+    blasts stop to surface
+    """
+
+    print("Blasting Stop to the Surface")
+    send_surface_state_to_ai() ##TODO ARGS
+    osc_dispatch('/stop-surface', 1)
 
 def end_handler(unused_addr, args):
     """
     ends the show
     """
     print("end of show")
-    currentState.update({'/action': 'end'})
+    current_state.update({'/action': 'end'})
     broadcast_state()
-    ## TODO 
 
     return
 
@@ -259,8 +287,8 @@ def osc_server(ip=ip_osc_server, port=port_server):
     dispatch.map("/refresh", refresh_handler)
     dispatch.map("/talking", talking_handler)
     dispatch.map("/end", end_handler)
-    dispatch.map("/thinking", thinking_handler)
     dispatch.map("/question", question_handler)
+    dispatch.map("/start-surface", surfacestart_handler)
     
     ## TODO: Talk State - > triger from AI to get new words/questions etc from teh AI on the server and then broadcast 
     
@@ -277,31 +305,25 @@ if __name__ == '__main__':
           help="The port the OSC server is listening on")
     parser.add_argument('--server', action='store_true', default=False,
                         help="Run in server mode")
-    parser.add_argument('--state', action='store_true',default=False,
-                        help="Broadcast the state")
     parser.add_argument('--text', action='store_true', default=False,
                         help="broadcast the text questions")
     parser.add_argument('--silent', action='store_true', default=False, help="end talking cue")
     parser.add_argument('--talking', action='store_true', default=False, help="get talking cue")
     parser.add_argument('--answer', action='store_true', default=False, help="get answer")
-    parser.add_argument('--thinking', action='store_true', default=False, help="sample thinking")
-    parser.add_argument('--question', action='store_true', default=False, help="send last statement")
     parser.add_argument('--reset', action='store_true', default=False, help="start over")
     parser.add_argument('--refresh', action='store_true', default=False, help="refresh questions")
     parser.add_argument('--end', action='store_true', default=False, help="end experience")
+    parser.add_argument('--question', action='store_true', default=False, help='test question handler')
     parser.add_argument('--surface', action='store_true', default=False, help="send dummy surface data")
     parser.add_argument('--startsurface', action='store_true', default=False, help="test surface start")
     parser.add_argument('--resetsurface', action='store_true', default=False, help="test surface reset")
+    parser.add_argument('--stopsurface', action='store_true', default=False, help="test surface stop")
     args = parser.parse_args()
     print("Got argument: {}".format(args))
     
     if args.server:
         print("Sending Server")
         osc_server()
-    elif args.state:
-        print("Sending state")
-        ##check_state()
-        broadcast_state()
     elif args.text:
         print("Sending Text")
         broadcast_questions()
@@ -314,12 +336,6 @@ if __name__ == '__main__':
     elif args.answer:
         print("Sending Answer") ## verified with web app
         osc_dispatch('/answer', "answer")
-    elif args.thinking:
-        print("Thinking Answer")
-        osc_dispatch('/thinking', "thinking")
-    elif args.question:
-        print("Sending Question")
-        osc_dispatch('/question', "question")
     elif args.reset:
         print("Reseting") ## verified with web app
         osc_dispatch('/reset', 1)    
@@ -329,6 +345,9 @@ if __name__ == '__main__':
     elif args.end:
         print("End experience")
         osc_dispatch('/end', 1)
+    elif args.question:
+        print("Sending a question")
+        osc_dispatch('/question', 1)
     elif args.startsurface:
         print("Telling surfaces to turn on")
         osc_dispatch('/start-surface', 1)
