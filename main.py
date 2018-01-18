@@ -210,7 +210,7 @@ def talking_handler(unused_addr, args):
     current_state.update({'/action': 'talking'})
     broadcast_state()
 
-    send_data_to_line_editor() 
+    ##send_data_to_line_editor() 
     
     return None
 
