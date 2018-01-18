@@ -369,15 +369,15 @@ if __name__ == '__main__':
     elif args.happy:
         print("Set state to happy")
         current_state.update({'/state': 'happy'})
-        print current_state
+        print(current_state)
     elif args.tolerant:
         print("Set state to tolerant")
         current_state.update({'/state': 'tolerant'})
-        print current_state
+        print(current_state)
     elif args.guarded:
         print("Set state to guarded")
         current_state.update({'/state': 'guarded'})
-        print current_state
+        print(current_state)
     elif args.startsurface:
         print("Telling surfaces to turn on")
         osc_dispatch('/start-surface', 1)
