@@ -219,7 +219,7 @@ def question_handler(unused_addr, args):
     shuts the machine up
     """
     print('question handler')
-    current_state.update({'/actions': 'question'})
+    current_state.update({'/action': 'question'})
     broadcast_state()
     
     return None
@@ -229,7 +229,7 @@ def thinking_handler(unsused_addr, args):
     shuts the machine up
     """
     print('thinking handler')
-    current_state.update({'/actions': 'thinking'})
+    current_state.update({'/action': 'thinking'})
     broadcast_state()
     
     return None   
