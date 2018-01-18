@@ -6,6 +6,7 @@ import datetime
 from pythonosc import dispatcher, osc_server, udp_client, osc_message_builder
 import requests
 from collections import OrderedDict
+from statistics import mean
 
 ## added variables to change the ip and port easily
 ## testing if Git works with  ST
@@ -160,6 +161,8 @@ def send_data_to_line_editor():
     broadcast_state()
     return None
 
+surface_data = []
+
 def surface_handler(unused_addr, args):
     """
     Handles the surface messages, alts sentiment
@@ -180,9 +183,8 @@ def surface_handler(unused_addr, args):
     print("From Surface Unit {0}".format(current_unit))
     current_words = vals['words']
     current_parts = vals['parts']
-    ##send_surface_state_to_ai(current_sentiment, current_energy, current_focus)
-    ## DO SOMETHING WITH UNIT, WORDS, PARTS
-    print("Surface updated AI State at: ", datetime.datetime.now().time())
+    surface_data.append(vals)
+    return None
  
 def reset_handler(unused_addr, args):
     """
@@ -191,6 +193,7 @@ def reset_handler(unused_addr, args):
     ## TODO: Implement
     print("reset handler")
     setup()
+    surface_data = []
     current_state.update({'/action': 'start'})
     broadcast_state()
     current_state.update({'/action': 'expectant'})
@@ -284,7 +287,10 @@ def surfacestop_handler(unused_addr, args):
     """
 
     print("Blasting Stop to the Surface")
-    ## send_surface_state_to_ai() ##TODO ARGS
+    sentiment = mean([d['sentiment'] for d in surface_data])
+    energy = mean([d['energy'] for d in surface_data])
+    focus = mean([d['focus'] for d in surface_data])
+    send_surface_state_to_ai(sentiment, energy, focus) 
     osc_dispatch('/stop-surface', 1)
 
 def end_handler(unused_addr, args):
