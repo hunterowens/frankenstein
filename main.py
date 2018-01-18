@@ -8,7 +8,7 @@ import requests
 from collections import OrderedDict
 
 ## added variables to change the ip and port easily
-## testing if Git works with ST
+## testing if Git works with  ST
 
 ip_osc = '192.168.1.255'
 ##ip_osc = '192.168.0.255'
@@ -301,6 +301,8 @@ def osc_server(ip=ip_osc_server, port=port_server):
     dispatch.map("/question", question_handler)
     dispatch.map("/thinking", thinking_handler)
     dispatch.map("/start-surface", surfacestart_handler)
+    dispatch.map("/stop-surface"), surfacestop_handler)
+    dispatch.map("/reset-surface"), surfacereset_handler)
     
     ## TODO: Talk State - > triger from AI to get new words/questions etc from teh AI on the server and then broadcast 
     
