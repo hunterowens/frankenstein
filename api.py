@@ -132,7 +132,7 @@ def form_data():
 
 @app.route("/form-data/all", methods=['GET'])
 def color_form_data():
-    query = FormData.query.order_by(FormData.created_date).limit(10)
+    query = FormData.query.order_by(FormData.created_date.desc()).limit(10)
     data = [fd.data for fd in query]
     return jsonify(data)
 
