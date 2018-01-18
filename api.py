@@ -130,6 +130,13 @@ def form_data():
     else:
         return render_template('pre-show_web_form.html')
 
+@app.route("/form-data/all", methods=['GET'])
+def color_form_data():
+    query = FormData.query.order_by(FormData.created_date).limit(10)
+    data = [fd.data for fd in query]
+    return jsonify(data)
+
+
 @app.route("/submitted")
 def thanks():
     """
