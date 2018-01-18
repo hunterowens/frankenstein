@@ -37,7 +37,8 @@ def change_state(current_state, new_state):
     return current_state
     """
     current_state['/state'] = new_state
-    return new_state
+    print("New State Set to {0}".format(current_state))
+    return current_state
 
 def send_surface_state_to_ai(sentiment, energy, focus):
     """
@@ -348,10 +349,9 @@ if __name__ == '__main__':
     parser.add_argument('--end', action='store_true', default=False, help="end experience")
     parser.add_argument('--question', action='store_true', default=False, help='test question handler')
     parser.add_argument('--thinking', action='store_true', default=False, help='test thinking handler')
-    parser.add_argument('--happy', action='store_true', default=False, help="set to happy")
-    parser.add_argument('--tolerant', action='store_true', default=False, help="set to tolerant")
-    parser.add_argument('--guarded', action='store_true', default=False, help="set to guarded")
     parser.add_argument('--surface', action='store_true', default=False, help="send dummy surface data")
+    parser.add_argument( "--set-state", dest="new-state", default='guarded',
+                        help="set teh new state", metavar="STATE")
     parser.add_argument('--startsurface', action='store_true', default=False, help="test surface start")
     parser.add_argument('--resetsurface', action='store_true', default=False, help="test surface reset")
     parser.add_argument('--stopsurface', action='store_true', default=False, help="test surface stop")
@@ -388,18 +388,6 @@ if __name__ == '__main__':
     elif args.thinking:
         print("Setting thinking")
         osc_dispatch('/thinking', 1)
-    elif args.happy:
-        print("Set state to happy")
-        current_state.update({'/state': 'happy'})
-        print(current_state)
-    elif args.tolerant:
-        print("Set state to tolerant")
-        current_state.update({'/state': 'tolerant'})
-        print(current_state)
-    elif args.guarded:
-        print("Set state to guarded")
-        current_state.update({'/state': 'guarded'})
-        print(current_state)
     elif args.startsurface:
         print("Telling surfaces to turn on")
         osc_dispatch('/startsurface', 1)
@@ -410,3 +398,6 @@ if __name__ == '__main__':
         print("Sending Surface Message")
         ## foo = json.loads('{"number": 1.0, "other": 4.3}')
         osc_dispatch('/surface-sentiments', '{"sentiment": 0.15, "focus": 0.65, "energy": -0.3, "unit": "test", "words": ["inspired", "anxious", "understanding"], "parts": ["hand", "eye", "head"]}')
+    elif vars(args)['new-state']:
+        print('changing state')
+        change_state(current_state, vars(args)['new-state'])
