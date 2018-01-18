@@ -13,6 +13,7 @@ from collections import OrderedDict
 ip_osc = '192.168.1.255'
 ##ip_osc = '192.168.0.255'
 ip_osc_server='0.0.0.0'
+ip_osc_editor='196.168.1.7'
 ## ip_osc = '10.253.0.255'
 port_server = 7007
 port_client = 7007
@@ -142,7 +143,7 @@ def send_data_to_line_editor():
     questions = json.dumps({"text" + str(k): v for k, v in data['questions'].items()})
 
     print("Sending questions to editor")
-    osc_dispatch('/textques', questions, port=port_client_editor)
+    osc_dispatch('/textques', questions, ip_osc_editor, port_client_editor)
     broadcast_state()
     return None
 
