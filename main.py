@@ -53,7 +53,7 @@ def send_answer_to_ai(answer):
     return r
 # this is the dictionary for the OSC meeting/ osc_dispatch
 current_state = OrderedDict()
-current_state["/state"] = "connected"
+current_state["/state"] = "happy"
 current_state["/action"] = "start"
 current_state["/sentiment"] = 0.0
 current_state["/energy"] = 0.0
@@ -369,6 +369,7 @@ if __name__ == '__main__':
     elif args.happy:
         print("Set state to happy")
         current_state.update({'/state': 'happy'})
+        print current_state
     elif args.tolerant:
         print("Set state to tolerant")
         current_state.update({'/state': 'tolerant'})
@@ -376,6 +377,7 @@ if __name__ == '__main__':
     elif args.guarded:
         print("Set state to guarded")
         current_state.update({'/state': 'guarded'})
+        print current_state
     elif args.startsurface:
         print("Telling surfaces to turn on")
         osc_dispatch('/start-surface', 1)
