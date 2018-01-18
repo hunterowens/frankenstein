@@ -21,6 +21,8 @@ port_client_editor = 7008
 
 ## this is the dictionary for the OSC meeting/ osc_dispatch
 currentState = {"/state":"happy", "/action":"talking", "/sentiment": -0.5, "/energy": 0.25, "/focus": -0.5 }
+##currentState = {"/state":"tolerant", "/action":"talking", "/sentiment": -0.5, "/energy": 0.25, "/focus": -0.5 }
+##currentState = {"/state":"guarded", "/action":"talking", "/sentiment": -0.5, "/energy": 0.25, "/focus": -0.5 }
 
 def send_state_to_ai(current_focus, current_energy, current_sentiment, current_unit, current_words, current_parts):
     """
@@ -181,6 +183,18 @@ def refresh_handler(unused_addr, args):
 
     return
 
+def thinking_handler(unused_addr, args):
+    """
+    Starts thinking
+    """
+    print("thinking handler")
+            
+    currentState.update({'/action': 'thinking'})
+    broadcast_state()
+
+    ## TODO 
+
+    return
 
 def talking_handler(unused_addr, args):
     """
@@ -205,6 +219,15 @@ def silent_handler(unused_addr, args):
     ## TODO 
 
     return
+
+def question_handler(unused_addr, args):
+    """
+    sends the final questions
+    """
+
+    print("Question Handler")
+    currentState.update({'/action': 'question'})
+    broadcast_state()
 
 def end_handler(unused_addr, args):
     """
@@ -260,6 +283,8 @@ if __name__ == '__main__':
     parser.add_argument('--silent', action='store_true', default=False, help="end talking cue")
     parser.add_argument('--talking', action='store_true', default=False, help="get talking cue")
     parser.add_argument('--answer', action='store_true', default=False, help="get answer")
+    parser.add_argument('--thinking', action='store_true', default=False, help="sample thinking")
+    parser.add_argument('--question', action='store_true', default=False, help="send last statement")
     parser.add_argument('--reset', action='store_true', default=False, help="start over")
     parser.add_argument('--refresh', action='store_true', default=False, help="refresh questions")
     parser.add_argument('--end', action='store_true', default=False, help="end experience")
@@ -288,6 +313,12 @@ if __name__ == '__main__':
     elif args.answer:
         print("Sending Answer") ## verified with web app
         osc_dispatch('/answer', "answer")
+    elif args.thinking:
+        print("Thinking Answer")
+        osc_dispatch('/thinking', "thinking")
+    elif args.question:
+        print("Sending Question")
+        osc_dispatch('/question', "question")
     elif args.reset:
         print("Reseting") ## verified with web app
         osc_dispatch('/reset', 1)    
