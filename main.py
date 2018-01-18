@@ -21,7 +21,23 @@ port_client_editor = 7008
 api_url = "http://frankenstein.hunterowens.net/"
 ## Some comments
 
+    
+current_state = OrderedDict()
+current_state["/state"] = "guarded"
+current_state["/action"] = "start"
+current_state["/sentiment"] = 0.0
+current_state["/energy"] = 0.0
+current_state["/focus"] = 0.0 
 
+
+def change_state(current_state, new_state):
+    """
+    Change the current state dict to 
+    reflect state param: new_state
+    return current_state
+    """
+    current_state['/state'] = new_state
+    return new_state
 
 def send_surface_state_to_ai(sentiment, energy, focus):
     """
@@ -53,13 +69,6 @@ def send_answer_to_ai(answer):
                       json={'string': answer},
                       headers=headers)
     return r
-# this is the dictionary for the OSC meeting/ osc_dispatch
-current_state = OrderedDict()
-current_state["/state"] = "guarded"
-current_state["/action"] = "start"
-current_state["/sentiment"] = 0.0
-current_state["/energy"] = 0.0
-current_state["/focus"] = 0.0 
 
 def get_sentiment_from_ai():
     """
@@ -286,6 +295,8 @@ def end_handler(unused_addr, args):
     broadcast_state()
 
     return
+
+print("some stupid stuff")
 
 def osc_server(ip=ip_osc_server, port=port_server):
     """
