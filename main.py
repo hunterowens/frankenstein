@@ -88,6 +88,7 @@ def setup():
     r = requests.get(api_url + "reset")
     print("AI Init State Waiting")
     current_state = get_sentiment_from_ai()
+    ##pull text from AI 
     return None
 
 
@@ -124,6 +125,8 @@ def broadcast_state(state=current_state, ip=ip_osc, port=port_client):
 def broadcast_text(AItext):
     """
     send a fixed piece of text from the AI
+    add delay into this OSC as second args
+    get text somehow 
     """
     
     osc_dispatch('/textnoquest', AItext, port=port_client_editor)
@@ -163,7 +166,8 @@ def surface_handler(unused_addr, args):
     print("From Surface Unit {0}".format(current_unit))
     current_words = vals['words']
     current_parts = vals['parts']
-    send_state_to_ai(current_focus, current_energy, current_sentiment, current_unit, current_words, current_parts)
+    ##send_surface_state_to_ai(current_sentiment, current_energy, current_focus)
+    ## DO SOMETHING WITH UNIT, WORDS, PARTS
     print("Surface updated AI State at: ", datetime.datetime.now().time())
  
 def reset_handler(unused_addr, args):
@@ -301,7 +305,7 @@ def osc_server(ip=ip_osc_server, port=port_server):
     dispatch.map("/question", question_handler)
     dispatch.map("/thinking", thinking_handler)
     dispatch.map("/start-surface", surfacestart_handler)
-    dispatch.map("/stop-surface"), surfacestop_handler)
+    dispatch.map("/close-surface"), surfacestop_handler)
     dispatch.map("/reset-surface"), surfacereset_handler)
     
     ## TODO: Talk State - > triger from AI to get new words/questions etc from teh AI on the server and then broadcast 
