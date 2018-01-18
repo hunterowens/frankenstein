@@ -85,19 +85,20 @@ def interact():
         # start making new text and questions
         if os.path.exists('./saved/faken-markov/' + cat + '.p'):
             f_mark = pickle.load(open('./saved/faken-markov/' + cat + '.p', 'rb'))
-            data['questions'] = {i: f_mark.make_sentence() for i in range(3)}
+            data['sentence'] = f_mark.make_sentence()
         else:
             f_mark = pickle.load(open('./saved/faken-markov/connected.p', 'rb'))
-            data['questions'] = {i: f_mark.make_sentence() for i in range(3)}
+            data['sentence'] = f_mark.make_sentence()
 
         # quetion time
 
         if os.path.exists('./saved/faken-questions/' + cat + '.p'):
             f_mark = pickle.load(open('./saved/faken-questions/' + cat + '.p', 'rb'))
-            data['questions'] = {i: f_mark.make_sentence() for i in range(3)}
+            data['questions'] = {i: f_mark.make_sentence() for i in range(4)}
         else:
             f_mark = pickle.load(open('./saved/faken-questions/guarded.p', 'rb'))
-            data['questions'] = {i: f_mark.make_sentence() for i in range(3)}
+            data['questions'] = {i: f_mark.make_sentence() for i in range(4)}
+        
         return jsonify(data)
 
 @app.route("/interact-surface", methods=['POST'])
