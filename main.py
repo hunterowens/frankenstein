@@ -67,8 +67,8 @@ def get_sentiment_from_ai():
     """
     print("Getting Data from AI")
     r = requests.get(api_url + 'interact')
-    print(r.status_code)
-    print(r)
+    if r.status_code != 200:
+        data = get_sentiment_from_ai()
     data = r.json()
     current_state['/state'] = data['state']
     current_state['/sentiment'] = data['sentiment']
