@@ -68,9 +68,12 @@ def get_sentiment_from_ai():
     """
     print("Getting Data from AI")
     r = requests.get(api_url + 'interact')
-    if r.status_code != 200:
-        data = get_sentiment_from_ai()
-    data = r.json()
+    if r.status_code == 200:
+        data = r.json()
+    else: 
+        data = pickle.load(open('./default-api-response.p','rb'))
+        print("Using Default Data: {}".format(data))
+        
     current_state['/state'] = data['state']
     current_state['/sentiment'] = data['sentiment']
     current_state['/focus'] = data['focus']
