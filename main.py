@@ -155,8 +155,8 @@ def send_data_to_line_editor():
     """
     data = get_sentiment_from_ai()
     questions = json.dumps({"text" + str(k): v for k, v in data['questions'].items()})
-
-    print("Sending questions to editor")
+    print("Questions {}".format(questions))
+    print("Sending questions to editor:)
     osc_dispatch('/textques', questions, ip_osc_editor, port_client_editor)
     broadcast_state()
     return None
