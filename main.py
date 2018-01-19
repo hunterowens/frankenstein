@@ -305,7 +305,7 @@ def surfacestop_handler(unused_addr, args):
     energy = mean([d['energy'] for d in surface_data])
     focus = mean([d['focus'] for d in surface_data])
     send_surface_state_to_ai(sentiment, energy, focus) 
-    osc_dispatch('/stop-surface', 1)
+    osc_dispatch('/close-surface', 1)
 
 def end_handler(unused_addr, args):
     """
