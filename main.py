@@ -155,13 +155,13 @@ def send_data_to_line_editor():
     """
     # data = get_sentiment_from_ai()
     print("Called Broadcast Question Function")
-    client = udp_client.UDPClient(ip, port,1)
+    client = udp_client.UDPClient(ip_osc_editor, port_client_editor,1)
     builder = osc_message_builder.OscMessageBuilder(address='/textques')
     for k,v in {'test': 0, 'fuck': 'No'}.items():
         builder.add_arg(v)
     print('builder ', builder)
     client.send(builder.build()) 
-    print("sent {0} to {1}:{2}".format(builder.args, ip, port))
+    print("sent {0} to {1}:{2}".format(builder.args, ip_osc_editor, port_client_editor))
     broadcast_state()
     return None
 
