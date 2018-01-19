@@ -18,7 +18,7 @@ ip_osc_editor='196.168.1.255'
 ## ip_osc = '10.253.0.255'
 port_server = 7007
 port_client = 7007
-port_client_editor = 7008
+port_client_editor = 7007
 api_url = "http://frankenstein.hunterowens.net/"
 ## Some comments
 
