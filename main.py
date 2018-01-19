@@ -155,9 +155,9 @@ def send_data_to_line_editor():
     """
     data = get_sentiment_from_ai()
     ##questions = json.dumps({"text" + str(k): v for k, v in data['questions'].items()})
-    questions ='{"text1": "How have you felt ashamed?", "text3": "Describe a small moment when you look at someone and when do you never tell the same way?", "text2": "Does an out of body experience make a human who I'm meeting for the first time?", "text0": "What is considered controversial?"}'
+    questions = "these are some questions:"
     print("Questions {}".format(questions))
-    print("Sending questions to editor:)
+    print("Sending questions to editor:")
     osc_dispatch('/textques', questions, ip_osc_editor, port_client_editor)
     broadcast_state()
     return None
