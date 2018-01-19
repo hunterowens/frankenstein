@@ -18,7 +18,7 @@ ip_osc_editor='196.168.1.7'
 ## ip_osc = '10.253.0.255'
 port_server = 7007
 port_client = 7007
-port_client_editor = 7008
+port_client_editor = 7007
 api_url = "http://frankenstein.hunterowens.net/"
 ## Some comments
 
@@ -153,11 +153,14 @@ def send_data_to_line_editor():
     """
     Sends data for display to Line Editor
     """
-    data = get_sentiment_from_ai()
-    questions = json.dumps({"text" + str(k): v for k, v in data['questions'].items()})
-
-    print("Sending questions to editor")
-    osc_dispatch('/textques', questions, ip_osc_editor, port_client_editor)
+    # data = get_sentiment_from_ai()
+    print("Called Broadcast State Function")
+    client = udp_client.UDPClient(ip, port,1)
+    builder = osc_message_builder.OscMessageBuilder(address='/textques')
+    for k,v in {'test': 0, 'fuck': 'No'}.items():
+        builder.add_arg(v)
+    client.send(builder.build()) 
+    print("sent {0} to {1}:{2}".format(builder.args, ip, port))
     broadcast_state()
     return None
 
