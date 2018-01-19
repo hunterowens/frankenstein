@@ -34,7 +34,7 @@ ch.setFormatter(formatter)
 logger.addHandler(fh)
 logger.addHandler(ch)
 
-from util import ip_osc, ip_osc_server, ip_osc_editor, port_server,port_client, port_client_editor, osc_dispatch    
+from util import ip_osc, ip_osc_server, ip_osc_editor, port_server,port_client, port_client_editor, osc_dispatch, api_url   
 current_state = OrderedDict()
 current_state["/state"] = "calm"
 current_state["/action"] = "start"
