@@ -301,11 +301,12 @@ def surfaceclose_handler(unused_addr, args):
     """
 
     print("Blasting Close to the Surface")
+    osc_dispatch('/close-surface', 1)
     sentiment = mean([d['sentiment'] for d in surface_data])
     energy = mean([d['energy'] for d in surface_data])
     focus = mean([d['focus'] for d in surface_data])
     send_surface_state_to_ai(sentiment, energy, focus) 
-    osc_dispatch('/close-surface', 1)
+
 
 def end_handler(unused_addr, args):
     """
@@ -324,13 +325,7 @@ def osc_server(ip=ip_osc_server, port=port_server):
     sets up and runs the OSC server. 
     """
     dispatch = dispatcher.Dispatcher()
-    
-    """
-    dispatch.map("/surface-sentiments", surface_handler)
-    dispatch.map("/reset", reset_handler)
-    dispatch.map("/silent", silent_handler)
-    """
-    
+  
     dispatch.map("/surface-sentiments", surface_handler)
     dispatch.map("/reset", reset_handler)
     dispatch.map("/silent", silent_handler)
