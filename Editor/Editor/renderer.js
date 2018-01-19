@@ -39,12 +39,14 @@ function playSoundFile(text, sendSilent = false) {
   responsiveVoice.speak(text, voice, { 
     rate: rate,
     onend: () => {
-      console.log("silent room")
-      const message = new OSC.Message('/silent', 1);
-      console.log(message);
-      osc.send(message); 
+      if (sendSilent){
+        console.log("silent room")
+        const message = new OSC.Message('/silent', 1);
+        console.log(message);
+        osc.send(message);
+        }
     }
-  }); 
+  });
 }
 
 function selectPredefinedQuestion(radioButton) {
@@ -59,14 +61,17 @@ function selectOptionSubmissionQuestion() {
 }
 
 function sayHello() {
-  var text = "Hello";
+  var text = "Welcome to the Lab. Thank you so much for your contributions in the parlor. Your emotional input is making a significant impact on my learning. As you heard before, I have been scraping the internet for information about humans. You can imagine what kinds of crazy things been learning about humanity in its virtual travels. This experience will help this naive creature deepen that learning.";
   request('http://frankenstein.hunterowens.net/form-data/all', function (error, response, body) {
     console.log('error:', error); // Print the error if one occurred
     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
     console.log('body:', body); // Print the HTML for the Google homepage
+    const message = new OSC.Message('/talking', 1)
     var obj = JSON.parse(body);
-    var name = obj[0].name[0];
-    playSoundFile(text + name);
+    for (i in obj) {
+      text = text + "Welcome " + obj[i].name[0] + "!"
+    }
+    playSoundFile(text);
   });
 } 
 
@@ -106,7 +111,7 @@ function askQuestion(event) {
   document.getElementById('questions').innerHTML = 'Waiting for text...';
   remote.getGlobal('sharedObject').questionSelected = '';
   setTimeout(() => {
-    playSoundFile(questionSelected);
+    playSoundFile(questionSelected, true);
   }, delay * 1000);
 }
 
