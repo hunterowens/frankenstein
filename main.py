@@ -295,17 +295,18 @@ def surfacereset_handler(unused_addr, args):
     print("Blasting Reset to the Surface")
     osc_dispatch('/reset-surface', 1)
 
-def surfacestop_handler(unused_addr, args):
+def surfaceclose_handler(unused_addr, args):
     """
-    blasts stop to surface
+    blasts close to surface
     """
 
-    print("Blasting Stop to the Surface")
+    print("Blasting Close to the Surface")
+    osc_dispatch('/close-surface', 1)
     sentiment = mean([d['sentiment'] for d in surface_data])
     energy = mean([d['energy'] for d in surface_data])
     focus = mean([d['focus'] for d in surface_data])
     send_surface_state_to_ai(sentiment, energy, focus) 
-    osc_dispatch('/stop-surface', 1)
+
 
 def end_handler(unused_addr, args):
     """
@@ -324,13 +325,7 @@ def osc_server(ip=ip_osc_server, port=port_server):
     sets up and runs the OSC server. 
     """
     dispatch = dispatcher.Dispatcher()
-    
-    """
-    dispatch.map("/surface-sentiments", surface_handler)
-    dispatch.map("/reset", reset_handler)
-    dispatch.map("/silent", silent_handler)
-    """
-    
+  
     dispatch.map("/surface-sentiments", surface_handler)
     dispatch.map("/reset", reset_handler)
     dispatch.map("/silent", silent_handler)
@@ -341,7 +336,7 @@ def osc_server(ip=ip_osc_server, port=port_server):
     dispatch.map("/question", question_handler)
     dispatch.map("/thinking", thinking_handler)
     dispatch.map("/startsurface", surfacestart_handler)
-    dispatch.map("/closesurface", surfacestop_handler)
+    dispatch.map("/closesurface", surfaceclose_handler)
     dispatch.map("/resetsurface", surfacereset_handler)
     
     ## TODO: Talk State - > triger from AI to get new words/questions etc from teh AI on the server and then broadcast 
@@ -374,7 +369,7 @@ if __name__ == '__main__':
                         help="set teh new state", metavar="STATE")
     parser.add_argument('--startsurface', action='store_true', default=False, help="test surface start")
     parser.add_argument('--resetsurface', action='store_true', default=False, help="test surface reset")
-    parser.add_argument('--stopsurface', action='store_true', default=False, help="test surface stop")
+    parser.add_argument('--closesurface', action='store_true', default=False, help="test surface stop")
     args = parser.parse_args()
     print("Got argument: {}".format(args))
     
@@ -411,6 +406,9 @@ if __name__ == '__main__':
     elif args.startsurface:
         print("Telling surfaces to turn on")
         osc_dispatch('/startsurface', 1)
+    elif args.closesurface:
+        print("Telling surfaces to close")
+        osc_dispatch('/closesurface', 1)
     elif args.resetsurface:
         print("Telling surfaces to start over")
         osc_dispatch('/resetsurface', 1)
