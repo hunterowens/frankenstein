@@ -72,7 +72,7 @@ def send_answer_to_ai(answer):
                       headers=headers)
     return r
 
-def get_sentiment_from_ai():
+def get_api_interact_data():
     """
     Gets state from AI, transforms into sentiment.
 
@@ -94,15 +94,13 @@ def get_sentiment_from_ai():
     return data
     
 
-
-
 def setup():
     """
     sets AI in waiting state
     """
     r = requests.get(api_url + "reset")
     print("AI Init State Waiting")
-    current_state = get_sentiment_from_ai()
+    current_state = get_api_interact_data()
     ##pull text from AI 
     return None
 
@@ -149,16 +147,30 @@ def broadcast_text(AItext):
     broadcast_state()
     return None
 
-def send_data_to_line_editor():
+def send_questions_to_line_editor():
     """
     Sends data for display to Line Editor
     """
-    data = get_sentiment_from_ai()
-    ##questions = json.dumps({"text" + str(k): v for k, v in data['questions'].items()})
-    questions ='{"text1": "How have you felt ashamed?", "text3": "Describe a small moment when you look at someone and when do you never tell the same way?", "text2": "Does an out of body experience make a human who I'm meeting for the first time?", "text0": "What is considered controversial?"}'
-    print("Questions {}".format(questions))
-    print("Sending questions to editor:)
-    osc_dispatch('/textques', questions, ip_osc_editor, port_client_editor)
+    data = get_api_interact_data()['questions']
+    print("Called send question to the line editor")
+    #client = udp_client.UDPClient(ip_osc_editor, port_client_editor,1)
+    #builder = osc_message_builder.OscMessageBuilder(address='/textques')
+    #for k,v in data.items():
+    #    builder.add_arg(v)
+    #builder.add_arg(.75)
+    #print('builder ', builder.address)
+    #client.send(builder.build()) 
+    #osc_dispatch('/textquest', .75, ip=ip_osc_server, port=port_client_editor)
+    # print("sent {0} to {1}:{2}".format(builder.args, ip_osc_editor, port_client_editor))
+    ip=ip_osc
+    port=port_client_editor
+    client = udp_client.UDPClient(ip, port,1)
+    print("Send Data to Line Editor {}:{}", ip, port)
+    builder = osc_message_builder.OscMessageBuilder(address='/textques')
+    for k,v in data.items():
+        builder.add_arg(v)
+    client.send(builder.build()) 
+    print("sent {0} to {1}:{2}".format(builder.args, ip, port))
     broadcast_state()
     return None
 
@@ -211,7 +223,7 @@ def answer_handler(unused_addr, args):
     broadcast_state()
 
     ## Call line editor
-    send_data_to_line_editor()
+    send_questions_to_line_editor()
     return None
 
 def refresh_handler(unused_addr, args):
@@ -219,7 +231,7 @@ def refresh_handler(unused_addr, args):
     Refresh text
     """
     print("Refreshing text")
-    send_data_to_line_editor()
+    send_questions_to_line_editor()
 
     return None
 
@@ -233,7 +245,7 @@ def talking_handler(unused_addr, args):
     current_state.update({'/action': 'talking'})
     broadcast_state()
 
-    send_data_to_line_editor() 
+    send_questions_to_line_editor() 
     
     return None
 
