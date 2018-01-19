@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "electron-context-menu": "^0.9.1",
+    "node-osc": "^2.1.0",
     "osc-js": "^1.2.0"
   }
 }

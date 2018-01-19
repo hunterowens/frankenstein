@@ -9,10 +9,10 @@ const osc = new OSC({ plugin: new OSC.DatagramPlugin(options) });
 console.log('OSC: ', osc);
 
 // Set host property for address other than localhost; eg. {host: 192.168.0.100, port: 7007}
-function createConnection() {
-  console.log('Open OSC Connection');
-  osc.open();
-}
+// function createConnection() {
+//  console.log('Open OSC Connection');
+//  osc.open();
+// }
 
 function closeConnection() {
   console.log('Close OSC Connection');
@@ -155,4 +155,5 @@ osc.on('/textnoques', (message) => {
   }, message.args[1] * 1000);
 });
 
+osc.open();
 window.addEventListener('unload', () => closeConnection());
