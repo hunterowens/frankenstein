@@ -23,6 +23,7 @@
     "electron-builder": "^19.52.1"
   },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
     "electron-context-menu": "^0.9.1",
     "node-osc": "^2.1.0",
     "osc-js": "^1.2.0"

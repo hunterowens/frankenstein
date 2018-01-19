@@ -1,7 +1,8 @@
 const OSC = require('osc-js');
 const remote = require('electron').remote;
-
+const request = require('request');
 const srv_port = 7007
+
 const options = {
   open: { host: '192.168.1.255', port: srv_port },
   send: { host: '192.168.1.3', port: 7007 }
@@ -56,6 +57,18 @@ function selectOptionSubmissionQuestion() {
   const userQuestion = document.getElementById('user-question').value;
   remote.getGlobal('sharedObject').questionSelected = userQuestion;
 }
+
+function sayHello() {
+  var text = "Hello";
+  request('http://frankenstein.hunterowens.net/form-data/all', function (error, response, body) {
+    console.log('error:', error); // Print the error if one occurred
+    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+    console.log('body:', body); // Print the HTML for the Google homepage
+    var obj = JSON.parse(body);
+    var name = obj[0].name[0];
+    playSoundFile(text + name);
+  });
+} 
 
 function addQuestion(message, questionNumber) {
   console.log('Add Question');
