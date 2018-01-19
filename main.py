@@ -413,7 +413,7 @@ if __name__ == '__main__':
         osc_dispatch('/startsurface', 1)
     elif args.closesurface:
         print("Telling surfaces to close")
-        osc_dispatch('/closesurface')
+        osc_dispatch('/closesurface', 1)
     elif args.resetsurface:
         print("Telling surfaces to start over")
         osc_dispatch('/resetsurface', 1)
