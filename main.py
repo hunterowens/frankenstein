@@ -14,7 +14,7 @@ from statistics import mean
 ip_osc = '192.168.1.255'
 ##ip_osc = '192.168.0.255'
 ip_osc_server='0.0.0.0'
-ip_osc_editor='196.168.1.7'
+ip_osc_editor='196.168.1.255'
 ## ip_osc = '10.253.0.255'
 port_server = 7007
 port_client = 7007
@@ -154,7 +154,7 @@ def send_data_to_line_editor():
     Sends data for display to Line Editor
     """
     # data = get_sentiment_from_ai()
-    print("Called Broadcast State Function")
+    print("Called Broadcast Question Function")
     client = udp_client.UDPClient(ip, port,1)
     builder = osc_message_builder.OscMessageBuilder(address='/textques')
     for k,v in {'test': 0, 'fuck': 'No'}.items():
