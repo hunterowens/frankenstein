@@ -341,7 +341,7 @@ def osc_server(ip=ip_osc_server, port=port_server):
     dispatch.map("/question", question_handler)
     dispatch.map("/thinking", thinking_handler)
     dispatch.map("/startsurface", surfacestart_handler)
-    dispatch.map("/closesurface", surfacestop_handler)
+    dispatch.map("/closesurface", surfaceclose_handler)
     dispatch.map("/resetsurface", surfacereset_handler)
     
     ## TODO: Talk State - > triger from AI to get new words/questions etc from teh AI on the server and then broadcast 
