@@ -61,7 +61,7 @@ function selectOptionSubmissionQuestion() {
 }
 
 function sayHello() {
-  var text = "Welcome to the Lab. Thank you so much for your contributions in the parlor. Your emotional input is making a significant impact on my learning. As you heard before, I have been scraping the internet for information about humans. You can imagine what kinds of crazy things been learning about humanity in its virtual travels. This experience will help this naive creature deepen that learning.";
+  var text = "Welcome to my Lab. Thank you so much for your contributions in the parlour. Your emotional input is making a significant impact on my learning. As my assistants have told you, I have been scraping the internet for information about humans. You can imagine what kinds of crazy things I have been learning about your kind during my virtual travels. Now, I need you help"
   request('http://frankenstein.hunterowens.net/form-data/all', function (error, response, body) {
     console.log('error:', error); // Print the error if one occurred
     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
@@ -69,8 +69,9 @@ function sayHello() {
     const message = new OSC.Message('/talking', 1)
     var obj = JSON.parse(body);
     for (i in obj) {
-      text = text + "Welcome " + obj[i].name[0] + "!"
+      text = text + " " + obj[i].name[0] + "!"
     }
+    text = text + "From our research today, I have learned much….Now I want to begin our questioning with the question you all found the most intriguing: Why do humans want other humans to like them?"
     playSoundFile(text);
   });
 } 
