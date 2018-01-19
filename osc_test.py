@@ -37,13 +37,13 @@ if __name__ == '__main__':
             print("No Action Recognized")
     elif args.startsurface:
         print("Telling surfaces to turn on")
-        osc_dispatch('/startsurface', 1)
+        osc_dispatch('/start-surface', 1)
     elif args.closesurface:
         print("Telling surfaces to close")
-        osc_dispatch('/closesurface', 1)
+        osc_dispatch('/close-surface', 1)
     elif args.resetsurface:
         print("Telling surfaces to start over")
-        osc_dispatch('/resetsurface', 1)
+        osc_dispatch('/reset-surface', 1)
     elif args.surface:
         print("Sending Surface Message")
         ## foo = json.loads('{"number": 1.0, "other": 4.3}')

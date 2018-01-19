@@ -118,7 +118,7 @@ def setup():
 
 
 
-def broadcast_state(state=current_state, ip=ip_osc, port=port_client, num_tries=1):  
+def broadcast_state(state=current_state, ip=ip_osc, port=port_client, num_tries=3):  
     """
     Broadcasts state
     """
@@ -145,7 +145,7 @@ def broadcast_text(AItext):
     broadcast_state(num_tries=3)
     return None
 
-def send_questions_to_line_editor(num_tries=1):
+def send_questions_to_line_editor(num_tries=3):
     """
     Sends data for display to Line Editor
     """
@@ -194,14 +194,9 @@ def reset_handler(unused_addr, args):
     """
     Handles the reset from Editor
     """
-    ## TODO: Implement
-    logger.info("reset handler for surface")
-    setup()
-    surface_data = []
+    logger.info('reset handler')
     current_state.update({'/action': 'start'})
-    broadcast_state(num_tries=3)
-    current_state.update({'/action': 'expectant'})
-
+    broadcast_state()
     return None
 
 def answer_handler(unused_addr, args):
