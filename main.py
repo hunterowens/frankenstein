@@ -159,6 +159,7 @@ def send_data_to_line_editor():
     builder = osc_message_builder.OscMessageBuilder(address='/textques')
     for k,v in {'test': 0, 'fuck': 'No'}.items():
         builder.add_arg(v)
+    print('builder ', builder)
     client.send(builder.build()) 
     print("sent {0} to {1}:{2}".format(builder.args, ip, port))
     broadcast_state()
