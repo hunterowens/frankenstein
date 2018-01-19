@@ -1,8 +1,9 @@
 const OSC = require('osc-js');
 const remote = require('electron').remote;
 
+const srv_port = 7402
 const options = {
-  open: { host: '192.168.1.27', port: 7402 },
+  open: { host: '192.168.1.27', port: srv_port },
   send: { host: '192.168.1.27', port: 7401 }
 };
 const osc = new OSC({ plugin: new OSC.DatagramPlugin(options) });
@@ -28,8 +29,7 @@ function sendRefresh() {
 }
 
 function playSoundFile(text, sendSilent = false) {
-  console.log("Called voice");
-  /*
+  console.log("Called voice"); 
   const voiceList = responsiveVoice.getVoices();
   const rate = document.getElementById('rate').value;
   const voiceSelect = document.getElementById('voice');
@@ -42,7 +42,7 @@ function playSoundFile(text, sendSilent = false) {
       console.log(message);
       osc.send(message); 
     }
-  }); */
+  }); 
 }
 
 function selectPredefinedQuestion(radioButton) {
@@ -129,22 +129,31 @@ osc.on('/state', (message) => {
     playSoundFile(message.args[0]);
 });
 
-osc.on('/textques', (message) => {
-  console.log(message);
-  document.getElementById('questions').innerHTML = '';
-  const messages = JSON.parse(message.args[0]);
-  addQuestion(messages.text0, '0');
-  addQuestion(messages.text1, '1');
-  addQuestion(messages.text2, '2');
-  addQuestion(messages.text3, '3');
-  addOpenSubmissionOption();
-  document.getElementById('user-question').addEventListener('input', () => {
-    const openOption = document.getElementById('open-option');
-    openOption.disabled = false;
-    openOption.checked = true;
-    remote.getGlobal('sharedObject').questionSelected = document.getElementById('user-question').value;
+var osc_node = require('node-osc');
+var oscServer = new osc_node.Server(srv_port, '0.0.0.0');
+
+
+oscServer.on("message", function (msg, rinfo) {
+      console.log("TUIO message:");
+      console.log(msg);
+      endpoint = msg[0];
+      console.log(endpoint);
+      if (endpoint == '/textques') {
+        console.log("in textques") 
+        addQuestion(msg[1], '0');
+        addQuestion(msg[2], '1');
+        addQuestion(msg[3], '2');
+        addQuestion(msg[4], '3');
+        addOpenSubmissionOption();
+      document.getElementById('user-question').addEventListener('input', () => {
+        const openOption = document.getElementById('open-option');
+        openOption.disabled = false;
+        openOption.checked = true;
+        remote.getGlobal('sharedObject').questionSelected = document.getElementById('user-question').value;
+      });
+    }
   });
-});
+
 
 osc.on('/textnoques', (message) => {
   console.log('/textnoques: ', message);
