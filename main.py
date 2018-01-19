@@ -295,12 +295,12 @@ def surfacereset_handler(unused_addr, args):
     print("Blasting Reset to the Surface")
     osc_dispatch('/reset-surface', 1)
 
-def surfacestop_handler(unused_addr, args):
+def surfaceclose_handler(unused_addr, args):
     """
-    blasts stop to surface
+    blasts close to surface
     """
 
-    print("Blasting Stop to the Surface")
+    print("Blasting Close to the Surface")
     sentiment = mean([d['sentiment'] for d in surface_data])
     energy = mean([d['energy'] for d in surface_data])
     focus = mean([d['focus'] for d in surface_data])
@@ -374,7 +374,7 @@ if __name__ == '__main__':
                         help="set teh new state", metavar="STATE")
     parser.add_argument('--startsurface', action='store_true', default=False, help="test surface start")
     parser.add_argument('--resetsurface', action='store_true', default=False, help="test surface reset")
-    parser.add_argument('--stopsurface', action='store_true', default=False, help="test surface stop")
+    parser.add_argument('--closesurface', action='store_true', default=False, help="test surface stop")
     args = parser.parse_args()
     print("Got argument: {}".format(args))
     
@@ -411,6 +411,9 @@ if __name__ == '__main__':
     elif args.startsurface:
         print("Telling surfaces to turn on")
         osc_dispatch('/startsurface', 1)
+    elif args.closesurface:
+        print("Telling surfaces to close")
+        osc_dispatch('/closesurface')
     elif args.resetsurface:
         print("Telling surfaces to start over")
         osc_dispatch('/resetsurface', 1)
