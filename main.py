@@ -126,13 +126,13 @@ def broadcast_state(state=current_state, ip=ip_osc, port=port_client):
     Broadcasts state
     """
     print("Called Broadcast State Function")
-    client = udp_client.UDPClient(ip, port,1)
-    builder = osc_message_builder.OscMessageBuilder(address='/status')
-    for k,v in state.items():
-        builder.add_arg(v)
+    #client = udp_client.UDPClient(ip, port,1)
+    #builder = osc_message_builder.OscMessageBuilder(address='/status')
+    #for k,v in state.items():
+    #    builder.add_arg(v)
 
-    client.send(builder.build()) 
-    print("sent {0} to {1}:{2}".format(builder.args, ip, port))
+    #client.send(builder.build()) 
+    #print("sent {0} to {1}:{2}".format(builder.args, ip, port))
     return None
 
 def broadcast_text(AItext):
