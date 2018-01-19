@@ -152,7 +152,7 @@ def send_questions_to_line_editor():
     Sends data for display to Line Editor
     """
     data = get_api_interact_data()['questions']
-    print("Called Broadcast Question Function")
+    print("Called send question to the line editor")
     #client = udp_client.UDPClient(ip_osc_editor, port_client_editor,1)
     #builder = osc_message_builder.OscMessageBuilder(address='/textques')
     #for k,v in data.items():

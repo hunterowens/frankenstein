@@ -35,9 +35,10 @@ function playSoundFile(text, sendSilent = false) {
   const voiceSelect = document.getElementById('voice');
   const voice = voiceSelect.options[voiceSelect.selectedIndex].text;
   console.log('Rate: ', rate, 'Voice: ', voice);
-  responsiveVoice.speak(text, voice, { rate: rate,
+  responsiveVoice.speak(text, voice, { 
+    rate: rate,
     onend: () => {
-      if (!sendSilent) { return; }
+      console.log("silent room")
       const message = new OSC.Message('/silent', 1);
       console.log(message);
       osc.send(message); 
