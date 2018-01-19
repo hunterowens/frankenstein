@@ -24,7 +24,7 @@ api_url = "http://frankenstein.hunterowens.net/"
 
     
 current_state = OrderedDict()
-current_state["/state"] = "guarded"
+current_state["/state"] = "calm"
 current_state["/action"] = "start"
 current_state["/sentiment"] = 0.0
 current_state["/energy"] = 0.0
