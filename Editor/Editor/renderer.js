@@ -2,8 +2,8 @@ const OSC = require('osc-js');
 const remote = require('electron').remote;
 
 const options = {
-  open: { host: '192.168.1.102', port: 7008 },
-  send: { host: '192.168.1.3', port: 7007 }
+  open: { host: '192.168.1.27', port: 7402 },
+  send: { host: '192.168.1.27', port: 7401 }
 };
 const osc = new OSC({ plugin: new OSC.DatagramPlugin(options) });
 console.log('OSC: ', osc);
