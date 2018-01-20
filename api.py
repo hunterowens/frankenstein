@@ -4,8 +4,8 @@ from flask import Flask, jsonify, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 import datetime 
 import os
-import pickle
-
+import joblib
+import pandas as pd
 app = Flask(__name__)
 
 print("Database URL: ", os.environ.get('DATABASE_URL', 'postgresql://hunterowens:@localhost/hunterowens'))
@@ -55,9 +55,9 @@ def interact():
     """
     if request.method == 'POST':
         data = request.get_json(force=True)
-        senti_model = pickle.load(open('./saved/m_senti.p', 'rb'))
-        focus_model = pickle.load(open('./saved/m_focus.p','rb'))
-        energy_model = pickle.load(open('./saved/m_energy.p','rb'))
+        senti_model = joblib.load(open('./saved/m_senti.p', 'rb'))
+        focus_model = joblib.load(open('./saved/m_focus.p','rb'))
+        energy_model = joblib.load(open('./saved/m_energy.p','rb'))
         string = data['string']
         # print(data)
         # print(string)
@@ -80,26 +80,29 @@ def interact():
         data['energy'] = s.energy
         # parse the text into a catagory
         text = s.text
-        le = pickle.load(open('./saved/classes.p','rb'))
-        cat_model = pickle.load(open('./saved/cat_model.p','rb'))
-        cat = le[cat_model.predict([text])][0]
-        data['state'] = cat
+        le = joblib.load(open('./saved/classes.p','rb'))
+        cat_model = joblib.load(open('./saved/cat_model.p','rb'))
+        probs = pd.concat([pd.Series(le), pd.Series(cat_model.predict_proba([text])[0])], axis=1)
+        list_probs = list(probs.sort_values(by=[1], ascending=False)[0][:3]) 
+        cat = list_probs[0]
+        data['state'] = list_probs[0]
+        data['state2'] = list_probs[1]
         data['text'] = text
         # start making new text and questions
         if os.path.exists('./saved/faken-markov/' + cat + '.p'):
-            f_mark = pickle.load(open('./saved/faken-markov/' + cat + '.p', 'rb'))
+            f_mark = joblib.load(open('./saved/faken-markov/' + cat + '.p', 'rb'))
             data['sentence'] = f_mark.make_sentence()
         else:
-            f_mark = pickle.load(open('./saved/faken-markov/connected.p', 'rb'))
+            f_mark = joblib.load(open('./saved/faken-markov/connected.p', 'rb'))
             data['sentence'] = f_mark.make_sentence()
 
         # quetion time
 
         if os.path.exists('./saved/faken-questions/' + cat + '.p'):
-            f_mark = pickle.load(open('./saved/faken-questions/' + cat + '.p', 'rb'))
+            f_mark = joblib.load(open('./saved/faken-questions/' + cat + '.p', 'rb'))
             data['questions'] = {i: f_mark.make_sentence() for i in range(4)}
         else:
-            f_mark = pickle.load(open('./saved/faken-questions/guarded.p', 'rb'))
+            f_mark = joblib.load(open('./saved/faken-questions/guarded.p', 'rb'))
             data['questions'] = {i: f_mark.make_sentence() for i in range(4)}
         
         return jsonify(data)

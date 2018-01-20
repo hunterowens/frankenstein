@@ -4,6 +4,7 @@ flask
 tensorflow
 nltk
 markovify
+joblib
 numpy
 gunicorn
 pandas

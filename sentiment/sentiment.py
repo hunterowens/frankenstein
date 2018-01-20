@@ -16,8 +16,8 @@ from nltk import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cross_validation import train_test_split
 from sklearn import preprocessing
-import pickle
 import markovify
+import joblib 
 
 def catagorize(row):
     """
@@ -91,7 +91,7 @@ def gen_markov(fp,lines):
     except KeyError:
         print("Couldn't make model for ", fp)
         return 
-    pickle.dump(m, open(fp, 'wb'))
+    joblib.dump(m, open(fp, 'wb'))
     print('saved ', fp)
     return m
 
@@ -99,8 +99,8 @@ if __name__ == '__main__':
     data  = pd.read_csv('./sentiment/training_data.csv', skiprows=[1])
     data['cat'] = data.apply(catagorize, axis = 1)
     t, le = generate_model(data)
-    pickle.dump(t, open('saved/cat_model.p', 'wb'))
-    pickle.dump(le.classes_, open('saved/classes.p', 'wb'))
+    joblib.dump(t, open('saved/cat_model.p', 'wb'))
+    joblib.dump(le.classes_, open('saved/classes.p', 'wb'))
     # Fakenstein Markov
     with open('./data/fakenstein.txt') as f:
         text = f.read()
@@ -111,9 +111,9 @@ if __name__ == '__main__':
         for line in tqdm(lines):
             cat = le.classes_[t.predict([line])][0]
             cat_data[cat].append(line)
-        pickle.dump(cat_data, open('./saved/cat_data.p', 'wb')) 
+        joblib.dump(cat_data, open('./saved/cat_data.p', 'wb')) 
     else:
-        cat_data = pickle.load(open('./saved/cat_data.p','rb'))
+        cat_data = joblib.load(open('./saved/cat_data.p','rb'))
     for key in cat_data.keys():
         gen_markov('./saved/faken-markov/' + key + '.p', cat_data[key])
     # Questions Markov
