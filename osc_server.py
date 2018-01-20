@@ -77,7 +77,7 @@ def send_surface_state_to_ai(sentiment, energy, focus):
     focus, energy, and sentiment are floats; unit is a string; words and parts are arrays of strings where the indexes correspond, so words[0] goes with parts[0]
     """
     change_state(current_state) 
-    logger.info("AI State is: {0} focus, {1} energy, and {2} sentiment".format(current_focus, current_energy, current_sentiment))
+    logger.info("AI State is: {0} focus, {1} energy, and {2} sentiment".format(focus, energy, sentiment))
     data = {
             'focus': focus,
             'sentiment': sentiment,
