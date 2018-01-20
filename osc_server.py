@@ -43,14 +43,28 @@ current_state["/energy"] = 0.0
 current_state["/focus"] = 0.0
 
 
-def change_state(current_state, new_state):
+def change_state(current_state):
     """
     Change the current state dict to 
     reflect state param: new_state
     return current_state
     """
-    request.get
-    current_state['/state'] = new_state
+    logger.info("Getting Data from AI")
+    r = requests.get(api_url + 'interact')
+    if r.status_code == 200:
+        data = r.json()
+    else: 
+        data = pickle.load(open('./default-api-response.p','rb'))
+        logger.info("Using Default Data: {}".format(data))
+    logger.info 
+    if data['state'] != current_state['/state']:
+        current_state['/state'] = data['state']
+    else:
+        current_state['/state'] = data['state2']
+    current_state['/sentiment'] = data['sentiment']
+    current_state['/focus'] = data['focus']
+    current_state['/energy'] = data['energy']
+    logger.info('state updated from API with {0}'.format(data))
     logger.info("New State Set to {0}".format(current_state))
     return current_state
 
@@ -59,7 +73,7 @@ def send_surface_state_to_ai(sentiment, energy, focus):
     sents the state / new talking  as JSON to the AI
     focus, energy, and sentiment are floats; unit is a string; words and parts are arrays of strings where the indexes correspond, so words[0] goes with parts[0]
     """
-    
+    change_state() 
     logger.info("AI State is: {0} focus, {1} energy, and {2} sentiment".format(current_focus, current_energy, current_sentiment))
     data = {
             'focus': focus,
@@ -126,6 +140,7 @@ def broadcast_state(state=current_state, ip=ip_osc, port=port_client, num_tries=
     """
     Broadcasts state
     """
+    change_state()
     logger.info("Called Broadcast State Function")
     client = udp_client.UDPClient(ip, port,1)
     builder = osc_message_builder.OscMessageBuilder(address='/status')
