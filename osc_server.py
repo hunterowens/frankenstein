@@ -98,7 +98,10 @@ def get_api_interact_data():
         data = pickle.load(open('./default-api-response.p','rb'))
         logger.info("Using Default Data: {}".format(data))
         
-    current_state['/state'] = data['state']
+    if data['state'] != current_state['/state']:
+        current_state['/state'] = data['state']
+    else:
+        current_state['/state'] = data['state2']
     current_state['/sentiment'] = data['sentiment']
     current_state['/focus'] = data['focus']
     current_state['/energy'] = data['energy']
@@ -266,7 +269,7 @@ def surfacestart_handler(unused_addr, args):
     blasts start to the surfaces
     """
     logger.info("Blasting Start to the Surfaces")
-    osc_dispatch('/start-surface', 1)
+    osc_dispatch('/start-surface', 1, ip='192.168.1.255', num_tries=3)
 
 def surfacereset_handler(unused_addr, args):
     """
@@ -274,7 +277,7 @@ def surfacereset_handler(unused_addr, args):
     """
 
     logger.info("Blasting Reset to the Surface")
-    osc_dispatch('/reset-surface', 1)
+    osc_dispatch('/reset-surface', 1, ip='192.168.1.255', num_tries=3)
 
 def surfacestop_handler(unused_addr, args):
     """
@@ -282,11 +285,12 @@ def surfacestop_handler(unused_addr, args):
     """
 
     logger.info("Blasting Stop to the Surface")
-    sentiment = mean([d['sentiment'] for d in surface_data])
-    energy = mean([d['energy'] for d in surface_data])
-    focus = mean([d['focus'] for d in surface_data])
-    send_surface_state_to_ai(sentiment, energy, focus) 
-    osc_dispatch('/stop-surface', 1)
+    if len(surface_data) != 0:
+        sentiment = mean([d['sentiment'] for d in surface_data])
+        energy = mean([d['energy'] for d in surface_data])
+        focus = mean([d['focus'] for d in surface_data])
+        send_surface_state_to_ai(sentiment, energy, focus) 
+    osc_dispatch('/stop-surface', 1, ip='192.168.1.255', num_tries=3)
 
 def end_handler(unused_addr, args):
     """

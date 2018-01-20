@@ -6,9 +6,9 @@ import argparse
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument( "--state", dest="new-state", default='guarded',
+    parser.add_argument( "--state", dest="new-state", 
                         help="set teh new state", metavar="STATE")
-    parser.add_argument( "--action", dest="action", default='expectant',
+    parser.add_argument( "--action", dest="action", 
                         help="set teh new action", metavar="ACTION")
     parser.add_argument('--surface', action='store_true', default=False, help="send dummy surface data")
     parser.add_argument('--startsurface', action='store_true', default=False, help="test surface start")
@@ -37,13 +37,13 @@ if __name__ == '__main__':
             print("No Action Recognized")
     elif args.startsurface:
         print("Telling surfaces to turn on")
-        osc_dispatch('/start-surface', 1)
-    elif args.closesurface:
+        osc_dispatch('/startsurface', 1)
+    elif args.stopsurface:
         print("Telling surfaces to close")
-        osc_dispatch('/close-surface', 1)
+        osc_dispatch('/closesurface', 1)
     elif args.resetsurface:
         print("Telling surfaces to start over")
-        osc_dispatch('/reset-surface', 1)
+        osc_dispatch('/resetsurface', 1)
     elif args.surface:
         print("Sending Surface Message")
         ## foo = json.loads('{"number": 1.0, "other": 4.3}')
