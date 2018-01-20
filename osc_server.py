@@ -49,6 +49,7 @@ def change_state(current_state, new_state):
     reflect state param: new_state
     return current_state
     """
+    request.get
     current_state['/state'] = new_state
     logger.info("New State Set to {0}".format(current_state))
     return current_state
@@ -97,7 +98,7 @@ def get_api_interact_data():
     else: 
         data = pickle.load(open('./default-api-response.p','rb'))
         logger.info("Using Default Data: {}".format(data))
-        
+    logger.info 
     if data['state'] != current_state['/state']:
         current_state['/state'] = data['state']
     else:
@@ -153,6 +154,7 @@ def send_questions_to_line_editor(num_tries=3):
     Sends data for display to Line Editor
     """
     data = get_api_interact_data()['questions']
+    broadcast_state()
     logger.info("Called send question to the line editor")
     ip=ip_osc
     port=port_client_editor
