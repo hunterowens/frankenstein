@@ -87,6 +87,7 @@ def interact():
         cat = list_probs[0]
         data['state'] = list_probs[0]
         data['state2'] = list_probs[1]
+        data['state3'] = list_probs[2]
         data['text'] = text
         # start making new text and questions
         # if os.path.exists('./saved/faken-markov/' + cat + '.p'):
