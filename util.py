@@ -4,7 +4,7 @@ import logging
 ##ip_osc = '192.168.1.255'
 ##ip_osc = '192.168.0.255'
 ip_osc = '0.0.0.0'
-ip_osc_server='196.168,1.255'
+ip_osc_server='196.168.1.255'
 ip_osc_editor='196.168.1.255'
 ## ip_osc = '10.253.0.255'
 port_server = 7007
