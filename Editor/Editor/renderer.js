@@ -10,6 +10,8 @@ const options = {
 const osc = new OSC({ plugin: new OSC.DatagramPlugin(options) });
 console.log('OSC: ', osc);
 
+var current_status;
+
 // Set host property for address other than localhost; eg. {host: 192.168.0.100, port: 7007}
 // function createConnection() {
 //  console.log('Open OSC Connection');
@@ -77,16 +79,40 @@ function sayHello() {
     const message = new OSC.Message('/talking', 1)
     const message1 = new OSC.Message('/talking', 1)
     const message2 = new OSC.Message('/talking', 1)
+    var text = "";
     osc.send(message);
     osc.send(message1);
     osc.send(message2);
     console.log("sending say hello " + message);
     var obj = JSON.parse(body);
-    for (i in obj) {
-      text = text + " " + obj[i].name[0] + "!"
-    }
-    text = text + "From our research today, I have learned much….Now I want to begin our questioning with the question you all found the most intriguing: Why do humans want other humans to like them?"
-    playSoundFile(text, true);
+    var question = obj[1].question[0]; 
+    request('http://frankenstein.hunterowens.net/interact', function (error, response, body) {
+      const status = JSON.parse(body);
+      const state = status.state2;
+      console.log("API state: " + state)
+      text += "Welcome to my Lab. Thank you for your contributions in the parlour. Your emotional data is making a significant impact on my learning., I parsed through the data you gave me, and "
+      text += state
+      text += " is the emotion I found.,, But I don’t understand why you wanted me to express this emotion. "
+      text += " have questions about human memories such as "
+      for (i = 1; i <= 2; i++){ 
+        text += " " +  obj[i].memory[0] + " ";
+      }
+      text += "I don’t understand why you harbor hopes such as "
+      for (i = 1; i <=2; i++) {
+        text += " " + obj[i].hopes[0] + " ";
+      }
+      text += " As my assistants told you, I have been scraping the internet for information about humans. You can imagine what kinds of crazy things I learned about your kind. Now I need to add to my corpus with data from actual human beings, like you: "
+      
+      for (i in obj) {
+        text = text + " " + obj[i].name[0] + "!";
+      }
+      text += " Now, I will begin our inquiry with the question you all found the most intriguing: "
+      text += question;
+      setTimeout(function () {
+        console.log(text);
+        playSoundFile(text, true);
+      }, 3000);
+    });
   });
 } 
 
@@ -193,12 +219,13 @@ oscServer.on("message", function (msg, rinfo) {
         addQuestion(msg[3], '2');
         addQuestion(msg[4], '3');
         addOpenSubmissionOption();
-      document.getElementById('user-question').addEventListener('input', () => {
-        const openOption = document.getElementById('open-option');
-        openOption.disabled = false;
-        openOption.checked = true;
-        remote.getGlobal('sharedObject').questionSelected = document.getElementById('user-question').value;
-      });
+        document.getElementById('user-question').addEventListener('input', () => {
+          const openOption = document.getElementById('open-option');
+          openOption.disabled = false;
+          openOption.checked = true;
+          remote.getGlobal('sharedObject').questionSelected = document.getElementById('user-question').value;
+        }); 
+      
     }
   });
 
