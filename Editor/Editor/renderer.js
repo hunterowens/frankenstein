@@ -17,6 +17,7 @@ var current_status;
 //  console.log('Open OSC Connection');
 //  osc.open();
 // }
+var obj;
 
 function closeConnection() {
   console.log('Close OSC Connection');
@@ -84,7 +85,7 @@ function sayHello() {
     osc.send(message1);
     osc.send(message2);
     console.log("sending say hello " + message);
-    var obj = JSON.parse(body);
+    obj = JSON.parse(body);
     var question = obj[1].question[0]; 
     request('http://frankenstein.hunterowens.net/interact', function (error, response, body) {
       const status = JSON.parse(body);
@@ -92,16 +93,8 @@ function sayHello() {
       console.log("API state: " + state)
       text += "Welcome to my Lab. Thank you for your contributions in the parlour. Your emotional data is making a significant impact on my learning., I parsed through the data you gave me, and "
       text += state
-      text += " is the emotion I found.,, But I don’t understand why you wanted me to express this emotion. "
-      text += " have questions about human memories such as "
-      for (i = 1; i <= 2; i++){ 
-        text += " " +  obj[i].memory[0] + " ";
-      }
-      text += "I don’t understand why you harbor hopes such as "
-      for (i = 1; i <=2; i++) {
-        text += " " + obj[i].hopes[0] + " ";
-      }
-      text += " As my assistants told you, I have been scraping the internet for information about humans. You can imagine what kinds of crazy things I learned about your kind. Now I need to add to my corpus with data from actual human beings, like you: "
+      text += " is the emotion I found. But I don’t understand why you wanted me to express this emotion. "
+      text += " As my assistants told you, I have been scraping the internet for information about humans. You can imagine what kinds of crazy things I learned about your kind. Now I need to add to my corpus with data from actual human beings like you: "
       
       for (i in obj) {
         text = text + " " + obj[i].name[0] + "!";
@@ -191,6 +184,10 @@ function stopSurface() {
 function endShow() {
   const message = new OSC.Message('/end', 1);
   console.log(message);
+  request('http://frankenstein.hunterowens.net/reset', function (error, response, body) {
+    console.log("API Reset Status Good: " + body)
+    return body 
+  }) 
   osc.send(message);
 }
 
