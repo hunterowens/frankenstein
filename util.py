@@ -1,9 +1,9 @@
 from pythonosc import dispatcher, osc_server, udp_client, osc_message_builder
 import logging 
 # const
-##ip_osc = '192.168.1.255'
+ip_osc = '192.168.1.255'
 ##ip_osc = '192.168.0.255'
-ip_osc = '0.0.0.0'
+##ip_osc = '0.0.0.0'
 ip_osc_server='196.168,1.255'
 ip_osc_editor='196.168.1.255'
 ## ip_osc = '10.253.0.255'
