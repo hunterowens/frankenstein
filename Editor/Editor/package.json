@@ -27,6 +27,7 @@
     "electron-context-menu": "^0.9.1",
     "node-osc": "^2.1.0",
     "osc-js": "^1.2.0",
-    "request": "^2.83.0"
+    "request": "^2.83.0",
+    "underscore": "^1.8.3"
   }
 }
