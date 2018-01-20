@@ -16,6 +16,7 @@ import requests
 from collections import OrderedDict
 from statistics import mean
 import logging
+import numpy as np 
 
 logger = logging.getLogger('osc_server')
 logger.setLevel(logging.INFO)
@@ -61,6 +62,8 @@ def change_state(current_state):
         current_state['/state'] = data['state']
     else:
         current_state['/state'] = data['state2']
+    if current_state['/state'] == "angry":
+        current_state['/state'] == np.random.choice([data['state'],data['state2'],data['state3']])
     current_state['/sentiment'] = data['sentiment']
     current_state['/focus'] = data['focus']
     current_state['/energy'] = data['energy']
