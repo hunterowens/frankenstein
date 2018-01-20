@@ -305,6 +305,7 @@ def surfacestop_handler(unused_addr, args):
     """
 
     logger.info("Blasting Stop to the Surface")
+    osc_dispatch('/stop-surface', 1, ip='192.168.1.255', num_tries=3)
     if len(surface_data) != 0:
         sentiment = mean([d['sentiment'] for d in surface_data])
         energy = mean([d['energy'] for d in surface_data])
