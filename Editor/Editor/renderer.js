@@ -25,8 +25,12 @@ function sendRefresh() {
   remote.getGlobal('sharedObject').questionSelected = '';
   document.getElementById('questions').innerHTML = 'Waiting for text...';
   const message = new OSC.Message('/refresh', 1);
+  const message1 = new OSC.Message('/refresh', 1);
+  const message2 = new OSC.Message('/refresh', 1);
   console.log(message);
   osc.send(message);
+  osc.send(message1);
+  osc.send(message2);
 }
 
 function playSoundFile(text, sendSilent = false) {
@@ -42,8 +46,12 @@ function playSoundFile(text, sendSilent = false) {
       if (sendSilent){
         console.log("silent room")
         const message = new OSC.Message('/silent', 1);
+        const message1 = new OSC.Message('/silent', 1);
+        const message2 = new OSC.Message('/silent', 1);
         console.log(message);
         osc.send(message);
+        osc.send(message1);
+        osc.send(message2);
         }
     }
   });
@@ -67,12 +75,18 @@ function sayHello() {
     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
     console.log('body:', body); // Print the HTML for the Google homepage
     const message = new OSC.Message('/talking', 1)
+    const message1 = new OSC.Message('/talking', 1)
+    const message2 = new OSC.Message('/talking', 1)
+    osc.send(message);
+    osc.send(message1);
+    osc.send(message2);
+    console.log("sending say hello " + message);
     var obj = JSON.parse(body);
     for (i in obj) {
       text = text + " " + obj[i].name[0] + "!"
     }
     text = text + "From our research today, I have learned much….Now I want to begin our questioning with the question you all found the most intriguing: Why do humans want other humans to like them?"
-    playSoundFile(text);
+    playSoundFile(text, true);
   });
 } 
 
@@ -92,9 +106,16 @@ function submitQuestions(event) {
   const delay = document.getElementById('delay').value;
   if (questionSelected === '') { return; }
   const message = new OSC.Message('/talking', questionSelected);
+  const message1 = new OSC.Message('/talking', questionSelected);
+  const message2 = new OSC.Message('/talking', questionSelected);
   console.log('Question: ', questionSelected, 'Delay: ', delay, 'Message: ', message);
   osc.send(message);
-  document.getElementById('questions').innerHTML = 'Waiting for text...';
+  osc.send(message1);
+  osc.send(message2);
+  document.getElementById('questions').innerHTML += 'Waiting for text...';
+  document.getElementById('questions').innerHTML += '<div class="question"><input type="radio" class="predefined-option" id="stored_question" name="question" value="What do feelings create and when" onchange="selectPredefinedQuestion(this);"><label for="predefinedQuestion">What do feelings create and when</label></div>';
+  document.getElementById('questions').innerHTML += '<div class="question"><input type="radio" class="predefined-option" id="stored_question" name="question" value="Does AI in the world scare you?" onchange="selectPredefinedQuestion(this);"><label for="predefinedQuestion">Does AI in the world scare you?</label></div>';
+  document.getElementById('questions').innerHTML += '<div class="question"><input type="radio" class="predefined-option" id="stored_question" name="question" value="When is loneliness a good thing? " onchange="selectPredefinedQuestion(this);"><label for="predefinedQuestion">When is loneliness a good thing?</label></div>';
   remote.getGlobal('sharedObject').questionSelected = '';
   setTimeout(() => {
     playSoundFile(questionSelected);
@@ -107,9 +128,16 @@ function askQuestion(event) {
   const delay = document.getElementById('delay').value;
   if (questionSelected === '') { return; }
   const message = new OSC.Message('/question', questionSelected);
+  const message1 = new OSC.Message('/question', questionSelected);
+  const message2 = new OSC.Message('/question', questionSelected);
   console.log('Question: ', questionSelected, 'Delay: ', delay, 'Message: ', message);
   osc.send(message);
-  document.getElementById('questions').innerHTML = 'Waiting for text...';
+  osc.send(message1);
+  osc.send(message2);
+  document.getElementById('questions').innerHTML += 'Waiting for text...';
+  document.getElementById('questions').innerHTML += '<div class="question"><input type="radio" class="predefined-option" id="stored_question" name="question" value="What do feelings create and when" onchange="selectPredefinedQuestion(this);"><label for="predefinedQuestion">What do feelings create and when</label></div>';
+  document.getElementById('questions').innerHTML += '<div class="question"><input type="radio" class="predefined-option" id="stored_question" name="question" value="Does AI in the world scare you?" onchange="selectPredefinedQuestion(this);"><label for="predefinedQuestion">Does AI in the world scare you?</label></div>';
+  document.getElementById('questions').innerHTML += '<div class="question"><input type="radio" class="predefined-option" id="stored_question" name="question" value="When is loneliness a good thing? " onchange="selectPredefinedQuestion(this);"><label for="predefinedQuestion">When is loneliness a good thing? </label></div>';
   remote.getGlobal('sharedObject').questionSelected = '';
   setTimeout(() => {
     playSoundFile(questionSelected, true);
