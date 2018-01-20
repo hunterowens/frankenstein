@@ -89,12 +89,12 @@ def interact():
         data['state2'] = list_probs[1]
         data['text'] = text
         # start making new text and questions
-        if os.path.exists('./saved/faken-markov/' + cat + '.p'):
-            f_mark = joblib.load(open('./saved/faken-markov/' + cat + '.p', 'rb'))
-            data['sentence'] = f_mark.make_sentence()
-        else:
-            f_mark = joblib.load(open('./saved/faken-markov/connected.p', 'rb'))
-            data['sentence'] = f_mark.make_sentence()
+        # if os.path.exists('./saved/faken-markov/' + cat + '.p'):
+        #    f_mark = joblib.load(open('./saved/faken-markov/' + cat + '.p', 'rb'))
+        #    data['sentence'] = f_mark.make_sentence()
+        #else:
+        #    f_mark = joblib.load(open('./saved/faken-markov/connected.p', 'rb'))
+        #    data['sentence'] = f_mark.make_sentence()
 
         # quetion time
 
