@@ -73,7 +73,7 @@ def send_surface_state_to_ai(sentiment, energy, focus):
     sents the state / new talking  as JSON to the AI
     focus, energy, and sentiment are floats; unit is a string; words and parts are arrays of strings where the indexes correspond, so words[0] goes with parts[0]
     """
-    change_state() 
+    change_state(current_state) 
     logger.info("AI State is: {0} focus, {1} energy, and {2} sentiment".format(current_focus, current_energy, current_sentiment))
     data = {
             'focus': focus,
@@ -140,7 +140,7 @@ def broadcast_state(state=current_state, ip=ip_osc, port=port_client, num_tries=
     """
     Broadcasts state
     """
-    change_state()
+    change_state(current_state=state)
     logger.info("Called Broadcast State Function")
     client = udp_client.UDPClient(ip, port,1)
     builder = osc_message_builder.OscMessageBuilder(address='/status')
