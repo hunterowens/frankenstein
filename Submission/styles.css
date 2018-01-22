@@ -1,0 +1,67 @@
+body, html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.start-button-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.start-button-wrapper button {
+  width: 150px;
+  height: 75px;
+  font-size: 2em;
+  border-radius: 5px;
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 75%;
+  height: 100%;
+}
+
+.message-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  width: 100%;
+  height: 50%;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  height: 50%;
+  align-items: flex-end;
+}
+
+#message {
+  height: 75px;
+  font-size: 2.5em;
+  border: none;
+}
+
+#message:focus {
+  outline: none;
+}
+
+.restart {
+  margin-bottom: 25px;
+  font-size: 1.25em;
+  height: 40px;
+  width: 100px;
+  border-radius: 5px;
+}

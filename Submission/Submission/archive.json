@@ -1,0 +1,48 @@
+{
+  "name": "submission-app",
+  "version": "1.0.4",
+  "description": "Submission app for Frankenstein at Sundance",
+  "main": "renderer.js",
+  "scripts": {
+    "postinstall": "install-app-deps",
+    "start": "electron .",
+    "pack": "build --dir",
+    "dist": "build",
+    "build:win": "build --win dir"
+  },
+  "devDependencies": {
+    "electron": "~1.7.8",
+    "electron-builder": "^19.54.0"
+  },
+  "dependencies": {
+    "electron-context-menu": "^0.9.1",
+    "osc-js": "^1.2.0",
+    "request": "^2.83.0"
+  },
+  "build": {
+    "appID": "Submission-app",
+    "dmg": {
+      "contents": [
+        {
+          "x": 110, 
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+
+        }
+      ]
+    },
+    "win": {
+        "target": "NSIS"
+    }
+
+
+    }
+
+ }
+
+
