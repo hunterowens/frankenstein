@@ -100,7 +100,7 @@ function sendFrank() {
   remote.getGlobal('sharedObject').questionSelected = ""
   state = remote.getGlobal('sharedObject').state;
   for(var i=0; i<listCount; i++) {
-     addQuestion(frank.state.i, i); //frank has 48
+     addQuestion(frank[state][i], i); //frank has 48
   }
  addOpenSubmissionOption();
   document.getElementById('user-question').addEventListener('input', () => {
@@ -117,7 +117,7 @@ function sendFake() {
   remote.getGlobal('sharedObject').questionSelected = "";
   state = remote.getGlobal('sharedObject').state;
   for(var i=0; i<listCount; i++) {
-     addQuestion(fake.state.i, i); // fake has 48
+     addQuestion(fake[state][i], i); // fake has 48
   }
  addOpenSubmissionOption();
   document.getElementById('user-question').addEventListener('input', () => {
@@ -133,7 +133,7 @@ function sendFunny() {
   remote.getGlobal('sharedObject').questionSelected = "";
   state = remote.getGlobal('sharedObject').state;
   for(var i=0; i<listCount; i++) {
-     addQuestion(funny.i, i); //funny has 4
+     addQuestion(funny[i], i); //funny has 4
   };
  addOpenSubmissionOption();
   document.getElementById('user-question').addEventListener('input', () => {
@@ -148,7 +148,7 @@ function sendTell() {
   remote.getGlobal('sharedObject').questionSelected = '';
   state = remote.getGlobal('sharedObject').state;
   for(var i=0; i<listCount; i++) {
-     addQuestion(tell.i, i); //tell has 4
+     addQuestion(tell[i], i); //tell has 4
   };
  addOpenSubmissionOption();
   document.getElementById('user-question').addEventListener('input', () => {
@@ -163,7 +163,7 @@ function sendReddit() {
   remote.getGlobal('sharedObject').questionSelected = "";
   state = remote.getGlobal('sharedObject').state;
   for(var i=0; i<listCount; i++) {
-     addQuestion(reddit.state.i, i); //reddit has 48
+     addQuestion(reddit[state][i], i); //reddit has 48
   };
  addOpenSubmissionOption();
   document.getElementById('user-question').addEventListener('input', () => {
