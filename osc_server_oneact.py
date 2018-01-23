@@ -173,11 +173,11 @@ def fireCue(action):
     osc_dispatch('/cue', action)
 """
 
-def send_questions_to_line_editor(num_tries=3):
+def send_text_to_line_editor(subject='questions', num_tries=3):
     """
     Sends data for display to Line Editor
     """
-    data = get_api_interact_data()['questions']
+    
     broadcast_state()
     logger.info("Called send question to the line editor")
     ip=ip_osc
@@ -192,7 +192,8 @@ def send_questions_to_line_editor(num_tries=3):
         client.send(builder.build()) 
         logger.info("sent {0} to {1}:{2}. Attempt {3}".format(builder.args, ip, port, _))
     broadcast_state()
-    return None
+    return None    
+
 
 surface_data = []
 
@@ -248,7 +249,7 @@ def answer_handler(unused_addr, args):
     current_state.update({'/action': 'thinking'})
     broadcast_state(num_tries=3)
 
-    send_questions_to_line_editor()
+    send_text_to_line_editor()
     return None
 
 def refresh_handler(unused_addr, args):
@@ -256,7 +257,7 @@ def refresh_handler(unused_addr, args):
     Refresh text
     """
     logger.info("Refreshing text")
-    send_questions_to_line_editor()
+    send_text_to_line_editor(args)
     return None
 
 
