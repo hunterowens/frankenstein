@@ -26,6 +26,11 @@ class FormData(db.Model):
     created_date = db.Column(db.DateTime, default=datetime.datetime.now())
     data = db.Column(db.JSON)
 
+class Sentence(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    created_date = db.Column(db.DateTime, default=datetime.datetime.now())
+    text = db.Column(db.String(5000))
+    cat = db.Column(db.String(50))
 @app.route('/')
 def test():
     """

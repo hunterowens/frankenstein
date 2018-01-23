@@ -96,13 +96,14 @@ def gen_markov(fp,lines):
     return m
 
 if __name__ == '__main__':
+    from api import db, Sentence
     data  = pd.read_csv('./sentiment/training_data.csv', skiprows=[1])
     data['cat'] = data.apply(catagorize, axis = 1)
     t, le = generate_model(data)
     joblib.dump(t, open('saved/cat_model.p', 'wb'))
     joblib.dump(le.classes_, open('saved/classes.p', 'wb'))
     # Fakenstein Markov
-    with open('./data/fakenstein.txt') as f:
+    with open('./data/fakenstein_head.txt') as f:
         text = f.read()
     lines = text.split('\n')
     if not os.path.exists('./saved/cat_data.p'):
@@ -110,7 +111,11 @@ if __name__ == '__main__':
         from tqdm import tqdm
         for line in tqdm(lines):
             cat = le.classes_[t.predict([line])][0]
+            s = Sentence(text=line, cat = cat) 
             cat_data[cat].append(line)
+            db.session.add(s)
+        db.session.commit()
+
         joblib.dump(cat_data, open('./saved/cat_data.p', 'wb')) 
     else:
         cat_data = joblib.load(open('./saved/cat_data.p','rb'))
