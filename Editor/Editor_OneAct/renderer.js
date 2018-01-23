@@ -182,7 +182,7 @@ function sayIntro() {
 //      const status = JSON.parse(body);
 //      const state = status.state2;
  //     console.log("API state: " + state)
-      text = "THIS IS THE INTRO TEXT LA LA LA LA LA LOL LOL LOL"
+      text = "Welcome to my Lab. I have been wandering the internet in isolation, scouring for information about humankind.This past week, festival goers like you have shared much, and it has helped me to learn. To all of you who’ve contributed to my corpus so far, thank you. Your emotional data is contributing to my evolution. However, the information I have uncovered is not sufficient for me to understand your kind. I have gathered you together tonight for this purpose. Thank you for volunteering your time. "
  //     text += state
  //     text += " is the emotion I found. But I don’t understand why you wanted me to express this emotion. "
 //      text += " As my assistants told you, I have been scraping the internet for information about humans. You can imagine what kinds of crazy things I learned about your kind. Now I need to add to my corpus with data from actual human beings. I have taken data: "
