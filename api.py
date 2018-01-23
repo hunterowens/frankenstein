@@ -90,7 +90,7 @@ def interact():
         data['state3'] = list_probs[2]
         data['text'] = text
         # start making new text and questions
-        # if os.path.exists('./saved/faken-markov/' + cat + '.p'):
+        #if os.path.exists('./saved/faken-markov/' + cat + '.p'):
         #    f_mark = joblib.load(open('./saved/faken-markov/' + cat + '.p', 'rb'))
         #    data['sentence'] = f_mark.make_sentence()
         #else:
@@ -118,6 +118,36 @@ def interact_surface():
     db.session.add(s)
     db.session.commit()
     return "surface data saved"
+
+@app.route("/talk", methods=["GET"])
+def talk():
+    s = State.query.order_by(State.created_date.desc()).first()
+    data={}
+    data['sentiment'] = s.sentiment
+    data['focus'] = s.focus
+    data['energy'] = s.energy
+    # parse the text into a catagory
+    text = s.text
+    le = joblib.load(open('./saved/classes.p','rb'))
+    cat_model = joblib.load(open('./saved/cat_model.p','rb'))
+    probs = pd.concat([pd.Series(le), pd.Series(cat_model.predict_proba([text])[0])], axis=1)
+    list_probs = list(probs.sort_values(by=[1], ascending=False)[0][:3]) 
+    cat = list_probs[0]
+    data['state'] = list_probs[0]
+    data['state2'] = list_probs[1]
+    data['state3'] = list_probs[2]
+    data['statement'] = None
+    #if os.path.exists('./saved/faken-markov/' + cat + '.p'):
+    #    f_mark = joblib.load(open('./saved/faken-markov/' + cat + '.p', 'rb'))
+    #    for _ in range(4):
+    #        texts = [f_mark.make_sentence() for i in range(8)]
+    #    data['statement'] = texts 
+    if 1 == 1: 
+        f_mark = joblib.load(open('./saved/faken-markov/sad.p', 'rb'))
+        for _ in range(4):
+            texts = [f_mark.make_sentence() for i in range(8)]
+        data['statement'] = texts
+    return jsonify(data)
 
 @app.route("/form-data", methods=['GET','POST'])
 def form_data():
