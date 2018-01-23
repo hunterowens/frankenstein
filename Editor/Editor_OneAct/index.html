@@ -44,17 +44,18 @@
         <button id="submit" onclick="submitQuestions(event);">Speak</button>
         <button id="ask" onclick="askQuestion(event);">End Speech</button>
         <button id="refresh" onclick="sendRefresh();">Question</button>
-        <button id="Frank" onclick="callFrank();">Frank</button>
-        <button id="Fake" onclick="callFake();">Fake</button>
-        <button id="Reddit" onclick="callReddit();">Reddit</button>
-        <button id="Funny" onclick="callFunny();">Funny</button>
+        <button id="Frank" onclick="sendFrank();">Frank</button>
+        <button id="Fake" onclick="sendFake();">Fake</button>
+        <button id="Reddit" onclick="sendReddit();">Reddit</button>
+        <button id="Funny" onclick="sendFunny();">Funny</button>
+        <button id="More" onclick="sendTell();">Tell</button>
       </div>
     </div>
     <script type="text/javascript" src="./renderer.js"></script>
-    <script>
-    //<script src="./renderer.js">
+    
+    <script src="./renderer.js">
       // You can also require other files to run in this process
-      require('./renderer.js');
+     // require('./renderer.js');
       //createConnection();
     </script>
     <script src="http://code.responsivevoice.org/responsivevoice.js"></script>

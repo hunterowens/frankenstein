@@ -15,7 +15,9 @@ const listCount = 4;
 var current_status;
 var gotQuestions; 
 
-request('frank.json', function (error, response, body) {
+
+//JSON REQUEST LIST -- CHANGE THE RELATIVE PATH IF YOU NEED TO KEEP THE JSON EXTERNAL 
+request('/json/frank.json', function (error, response, body) {
     console.log("Calling frank JSON");
     var frank = JSON.parse(body);
     console.log('error:', error);
@@ -24,7 +26,7 @@ request('frank.json', function (error, response, body) {
 
 });
 
-request('funny.json', function(error, response, body){
+request('/json/funny.json', function(error, response, body){
     console.log("Calling funny JSON");
     var funny = JSON.parse(body);
     console.log('error:', error);
@@ -33,14 +35,38 @@ request('funny.json', function(error, response, body){
 
 });
 
-request('reddit.json', function(error, response, body){
+request('/json/reddit.json', function(error, response, body){
     console.log("Calling funny JSON");
+    var reddit = JSON.parse(body);
+    console.log('error:', error);
+    console.log('statusCode:', response && response.statusCode); 
+    console.log('body:', frank); 
+    console.log("Calling reddit JSON");
+    var reddit = JSON.parse(body);
+    console.log('error:', error);
+    console.log('statusCode:', response && response.statusCode); 
+    console.log('body:', frank); 
+});
+
+request('/json/fake.json', function(error, response, body){
+    console.log("Calling fake JSON");
+    var fake = JSON.parse(body);
+    console.log('error:', error);
+    console.log('statusCode:', response && response.statusCode); 
+    console.log('body:', frank); 
+
+});
+
+request('/json/tellmemore.json', function(error, response, body){
+    console.log("Calling reddit JSON");
     var reddit = JSON.parse(body);
     console.log('error:', error);
     console.log('statusCode:', response && response.statusCode); 
     console.log('body:', frank); 
 
 });
+
+
 
 
 // Set host property for address other than localhost; eg. {host: 192.168.0.100, port: 7007}
@@ -72,7 +98,7 @@ function sendFrank() {
   remote.getGlobal('sharedObject').questionSelected = ""
   state = remote.getGlobal('sharedObject').state;
   for(var i=0; i<listCount; i++) {
-     addQuestion(frank.state.i, 0);
+     addQuestion(frank.state.i, i); //frank has 48
   }
  addOpenSubmissionOption();
   document.getElementById('user-question').addEventListener('input', () => {
@@ -86,15 +112,26 @@ function sendFrank() {
 
 function sendFake() {
 
-  // need to discuss how this will work if it's local -- I would prefer you (Hunter) to write this
+  remote.getGlobal('sharedObject').questionSelected = ""
+  state = remote.getGlobal('sharedObject').state;
+  for(var i=0; i<listCount; i++) {
+     addQuestion(fake.state.i, i); // fake has 48
+  }
+ addOpenSubmissionOption();
+  document.getElementById('user-question').addEventListener('input', () => {
+   const openOption = document.getElementById('open-option');
+   openOption.disabled = false;
+   openOption.checked = true;
+   remote.getGlobal('sharedObject').questionSelected = document.getElementById('user-question').value;  }
 
-}
+)}
+
 
 function sendFunny() {
   remote.getGlobal('sharedObject').questionSelected = ""
   state = remote.getGlobal('sharedObject').state;
   for(var i=0; i<listCount; i++) {
-     addQuestion(funny.state.i, 0);
+     addQuestion(funny.i, i); //funny has 4
   };
  addOpenSubmissionOption();
   document.getElementById('user-question').addEventListener('input', () => {
@@ -105,13 +142,28 @@ function sendFunny() {
 }
 )}
 
+function sendTell() {
+  remote.getGlobal('sharedObject').questionSelected = '';
+  remote.getGlobal('sharedObject').questionSelected = ""
+  state = remote.getGlobal('sharedObject').state;
+  for(var i=0; i<listCount; i++) {
+     addQuestion(tell.i, i); //tell has 4
+  };
+ addOpenSubmissionOption();
+  document.getElementById('user-question').addEventListener('input', () => {
+   const openOption = document.getElementById('open-option');
+   openOption.disabled = false;
+   openOption.checked = true;
+   remote.getGlobal('sharedObject').questionSelected = document.getElementById('user-question').value;}
+)}
+
 
 function sendReddit() {
   remote.getGlobal('sharedObject').questionSelected = '';
   remote.getGlobal('sharedObject').questionSelected = ""
   state = remote.getGlobal('sharedObject').state;
   for(var i=0; i<listCount; i++) {
-     addQuestion(reddit.state.i, 0);
+     addQuestion(reddit.state.i, i); //reddit has 48
   };
  addOpenSubmissionOption();
   document.getElementById('user-question').addEventListener('input', () => {
@@ -252,9 +304,8 @@ function askQuestion(event) {
 }
 
 function fireCue(cue) {
-  var cueAddress = '/' + cue; 
   console.log('Going to send:' + cueAddress + ', 1');
-  const message = new OSC_JS.message(cueAddress, 1);
+  const message = new OSC_JS.message('/cue', cue);
   console.log(message);
   osc.send(message);
 
