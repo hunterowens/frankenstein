@@ -158,6 +158,7 @@ def talk():
     sentences_shelly = Sentence_Shelly.query.filter_by(cat = cat).limit(100).all()
     texts_org = [np.random.choice(sentences).text for s in range(8)]
     data['statement_real'] = texts_org
+    data['reddit'] = ["some","fake", "reddit"]
     return jsonify(data)
 
 @app.route("/form-data", methods=['GET','POST'])
