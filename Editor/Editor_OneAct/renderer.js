@@ -10,17 +10,37 @@ const options = {
 const osc = new OSC_JS({ plugin: new OSC_JS.DatagramPlugin(options) });
 console.log('OSC: ', osc);
 
+const listCount = 4; 
+
 var current_status;
 var gotQuestions; 
 
 request('frank.json', function (error, response, body) {
     console.log("Calling frank JSON");
     var frank = JSON.parse(body);
-    console.log('error:', error); // Print the error if one occurred
-    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-    console.log('body:', frank); // Print the HTML for the Google homepage
+    console.log('error:', error);
+    console.log('statusCode:', response && response.statusCode); 
+    console.log('body:', frank); 
 
-}); 
+});
+
+request('funny.json', function(error, response, body){
+    console.log("Calling funny JSON");
+    var funny = JSON.parse(body);
+    console.log('error:', error);
+    console.log('statusCode:', response && response.statusCode); 
+    console.log('body:', frank); 
+
+});
+
+request('reddit.json', function(error, response, body){
+    console.log("Calling funny JSON");
+    var reddit = JSON.parse(body);
+    console.log('error:', error);
+    console.log('statusCode:', response && response.statusCode); 
+    console.log('body:', frank); 
+
+});
 
 
 // Set host property for address other than localhost; eg. {host: 192.168.0.100, port: 7007}
@@ -49,32 +69,34 @@ function sendRefresh() {
 
 
 function sendFrank() {
-  remote.getGlobal('sharedObject').questionSelected = '';
-  //getJSON
-  addQuestion(msg[1], '0');
-  addQuestion(msg[2], '1');
-  addQuestion(msg[3], '2');
-  addQuestion(msg[4], '3');
-  addOpenSubmissionOption();
+  remote.getGlobal('sharedObject').questionSelected = ""
+  state = remote.getGlobal('sharedObject').state;
+  for(var i=0; i<listCount; i++) {
+     addQuestion(frank.state.i, 0);
+  }
+ addOpenSubmissionOption();
   document.getElementById('user-question').addEventListener('input', () => {
    const openOption = document.getElementById('open-option');
    openOption.disabled = false;
    openOption.checked = true;
-   remote.getGlobal('sharedObject').questionSelected = document.getElementById('user-question').value;
-  }
+   remote.getGlobal('sharedObject').questionSelected = document.getElementById('user-question').value;  }
 
 )}
 
 
-
 function sendFake() {
+
+  // need to discuss how this will work if it's local -- I would prefer you (Hunter) to write this
+
+}
+
+function sendFunny() {
   remote.getGlobal('sharedObject').questionSelected = ""
-  //getJSON
-  addQuestion(msg[1], '0');
-  addQuestion(msg[2], '1');
-  addQuestion(msg[3], '2');
-  addQuestion(msg[4], '3');
-  addOpenSubmissionOption();
+  state = remote.getGlobal('sharedObject').state;
+  for(var i=0; i<listCount; i++) {
+     addQuestion(funny.state.i, 0);
+  };
+ addOpenSubmissionOption();
   document.getElementById('user-question').addEventListener('input', () => {
    const openOption = document.getElementById('open-option');
    openOption.disabled = false;
@@ -86,18 +108,17 @@ function sendFake() {
 
 function sendReddit() {
   remote.getGlobal('sharedObject').questionSelected = '';
-  //getJSON
-  addQuestion(msg[1], '0');
-  addQuestion(msg[2], '1');
-  addQuestion(msg[3], '2');
-  addQuestion(msg[4], '3');
-  addOpenSubmissionOption();
+  remote.getGlobal('sharedObject').questionSelected = ""
+  state = remote.getGlobal('sharedObject').state;
+  for(var i=0; i<listCount; i++) {
+     addQuestion(reddit.state.i, 0);
+  };
+ addOpenSubmissionOption();
   document.getElementById('user-question').addEventListener('input', () => {
    const openOption = document.getElementById('open-option');
    openOption.disabled = false;
    openOption.checked = true;
-   remote.getGlobal('sharedObject').questionSelected = document.getElementById('user-question').value;
-}
+   remote.getGlobal('sharedObject').questionSelected = document.getElementById('user-question').value;}
 )}
 
 

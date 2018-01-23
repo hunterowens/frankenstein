@@ -1,101 +1,101 @@
-{
+[{
 	"tolerant": {
 
+		"0": "TEXT",
 		"1": "TEXT",
 		"2": "TEXT",
-		"3": "TEXT",
-		"4": "TEXT"
+		"3": "TEXT"
 
 	},
 
 	"connected": {
 
+     	"0": "TEXT",
 		"1": "TEXT",
 		"2": "TEXT",
-		"3": "TEXT",
-		"4": "TEXT"
+		"3": "TEXT"
 
 	},
 	
 	"vulnerable": {
 
+     	"0": "TEXT",
 		"1": "TEXT",
 		"2": "TEXT",
-		"3": "TEXT",
-		"4": "TEXT"
+		"3": "TEXT"
 
 	},
 	
 	"calm": {
 
+     	"0": "TEXT",
 		"1": "TEXT",
 		"2": "TEXT",
-		"3": "TEXT",
-		"4": "TEXT"
+		"3": "TEXT"
 
 	},
 	"hopeful": {
 
+     	"0": "TEXT",
 		"1": "TEXT",
 		"2": "TEXT",
-		"3": "TEXT",
-		"4": "TEXT"
+		"3": "TEXT"
 
 	},
 	"happy": {
 
+     	"0": "TEXT",
 		"1": "TEXT",
 		"2": "TEXT",
-		"3": "TEXT",
-		"4": "TEXT"
+		"3": "TEXT"
 
 	},
 	"lonely": {
 
+     	"0": "TEXT",
 		"1": "TEXT",
 		"2": "TEXT",
-		"3": "TEXT",
-		"4": "TEXT"
+		"3": "TEXT"
 
 	},
 	"angry": {
 
+     	"0": "TEXT",
 		"1": "TEXT",
 		"2": "TEXT",
-		"3": "TEXT",
-		"4": "TEXT"
+		"3": "TEXT"
 
 	},
 	"guarded": {
 
+     	"0": "TEXT",
 		"1": "TEXT",
 		"2": "TEXT",
-		"3": "TEXT",
-		"4": "TEXT"
+		"3": "TEXT"
 
 	},	
 	"guarded": {
 
+     	"0": "TEXT",
 		"1": "TEXT",
 		"2": "TEXT",
-		"3": "TEXT",
-		"4": "TEXT"
+		"3": "TEXT"
 
 	},	
 	"anxious": {
 
+     	"0": "TEXT",
 		"1": "TEXT",
 		"2": "TEXT",
-		"3": "TEXT",
-		"4": "TEXT"
+		"3": "TEXT"
 
 	},
 	"sad": {
 
+     	"0": "TEXT",
 		"1": "TEXT",
 		"2": "TEXT",
-		"3": "TEXT",
-		"4": "TEXT"
+		"3": "TEXT"
 
 	}
-}
+}]
