@@ -229,7 +229,7 @@ def reset_handler(unused_addr, args):
 
 def cue_handler(unused_addr, args):
     """
-    Handles the reset from Editor
+    Handles the cues from Editor
     """
     logger.info('send cue {}'.format(args))
     osc_dispatch('/cue', args)
