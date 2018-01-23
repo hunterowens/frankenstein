@@ -16,7 +16,7 @@ var current_status;
 var gotQuestions; 
 
 
-//JSON REQUEST LIST -- CHANGE THE RELATIVE PATH IF YOU NEED TO KEEP THE JSON EXTERNAL 
+//HUNTER: JSON REQUEST LIST -- CHANGE THE RELATIVE PATH IF YOU NEED TO KEEP THE JSON EXTERNAL 
 request('/json/frank.json', function (error, response, body) {
     console.log("Calling frank JSON");
     var frank = JSON.parse(body);
@@ -66,7 +66,7 @@ request('/json/tellmemore.json', function(error, response, body){
 
 });
 
-
+// HUNTER -- END OF JSON REQUEST LIST
 
 
 // Set host property for address other than localhost; eg. {host: 192.168.0.100, port: 7007}
@@ -93,6 +93,8 @@ function sendRefresh() {
   osc.send(message2);
 }
 
+// HUNTER -- THESE ARE NEW FUNCTIONS THAT GET TEXT FROM  JSON FILES FOR AI STATEMENTS.
+// THIS SHOULD FUNCTION EXACTLY LIKE refreshQuestions() EXCEPT THAT IT PULLS FROM JSON. 
 
 function sendFrank() {
   remote.getGlobal('sharedObject').questionSelected = ""
@@ -112,7 +114,7 @@ function sendFrank() {
 
 function sendFake() {
 
-  remote.getGlobal('sharedObject').questionSelected = ""
+  remote.getGlobal('sharedObject').questionSelected = "";
   state = remote.getGlobal('sharedObject').state;
   for(var i=0; i<listCount; i++) {
      addQuestion(fake.state.i, i); // fake has 48
@@ -128,7 +130,7 @@ function sendFake() {
 
 
 function sendFunny() {
-  remote.getGlobal('sharedObject').questionSelected = ""
+  remote.getGlobal('sharedObject').questionSelected = "";
   state = remote.getGlobal('sharedObject').state;
   for(var i=0; i<listCount; i++) {
      addQuestion(funny.i, i); //funny has 4
@@ -144,7 +146,6 @@ function sendFunny() {
 
 function sendTell() {
   remote.getGlobal('sharedObject').questionSelected = '';
-  remote.getGlobal('sharedObject').questionSelected = ""
   state = remote.getGlobal('sharedObject').state;
   for(var i=0; i<listCount; i++) {
      addQuestion(tell.i, i); //tell has 4
@@ -159,8 +160,7 @@ function sendTell() {
 
 
 function sendReddit() {
-  remote.getGlobal('sharedObject').questionSelected = '';
-  remote.getGlobal('sharedObject').questionSelected = ""
+  remote.getGlobal('sharedObject').questionSelected = "";
   state = remote.getGlobal('sharedObject').state;
   for(var i=0; i<listCount; i++) {
      addQuestion(reddit.state.i, i); //reddit has 48
@@ -172,6 +172,8 @@ function sendReddit() {
    openOption.checked = true;
    remote.getGlobal('sharedObject').questionSelected = document.getElementById('user-question').value;}
 )}
+
+// HUNTER -- END OF NEW REFRESH FUNCTIONS
 
 
 function playSoundFile(text, sendSilent = false) {
@@ -210,7 +212,7 @@ function selectOptionSubmissionQuestion() {
 }
 
 function sayHello() {
-  var text = "Welcome to my Lab. Thank you so much for your contributions in the parlour. Your emotional input is making a significant impact on my learning. As my assistants have told you, I have been scraping the internet for information about humans. You can imagine what kinds of crazy things I have been learning about your kind during my virtual travels. Now, I need you help"
+  //var text = "Welcome to my Lab. Thank you so much for your contributions in the parlour. Your emotional input is making a significant impact on my learning. As my assistants have told you, I have been scraping the internet for information about humans. You can imagine what kinds of crazy things I have been learning about your kind during my virtual travels. Now, I need you help"
   request('http://frankenstein.hunterowens.net/form-data/all', function (error, response, body) {
     console.log('error:', error); // Print the error if one occurred
     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
@@ -232,7 +234,7 @@ function sayHello() {
       text += "Welcome to my Lab. Thank you for your contributions in the parlour. Your emotional data is making a significant impact on my learning., I parsed through the data you gave me, and "
       text += state
       text += " is the emotion I found. But I don’t understand why you wanted me to express this emotion. "
-      text += " As my assistants told you, I have been scraping the internet for information about humans. You can imagine what kinds of crazy things I learned about your kind. Now I need to add to my corpus with data from actual human beings like you: "
+      text += " As my assistants told you, I have been scraping the internet for information about humans. You can imagine what kinds of crazy things I learned about your kind. Now I need to add to my corpus with data from actual human beings. I have taken data: "
       
       for (i in obj) {
         text = text + " " + obj[i].name[0] + "!";
@@ -256,6 +258,9 @@ function addOpenSubmissionOption() {
   console.log('Open Submission Added');
   document.getElementById('questions').innerHTML += `<div class="question"><input type="radio" id="open-option" name="question" onchange="selectOptionSubmissionQuestion(this);" disabled=true><input id="user-question" type="text">`
 }
+
+// HUNTER -- I ADDED A TRACKING BOOLEAN (gotQuestions) to submitQuestions() and askQuestions() 
+// TO KEEP THE TEXT FROM COMING IN TRIPLICATE
 
 function submitQuestions(event) {
   event.preventDefault();
@@ -303,14 +308,19 @@ function askQuestion(event) {
   }, delay * 1000);
 }
 
+
+// HUNTER -- THIS FUNCTION SENDS A CUE MESSAGE TO THE SYSTEM FOR SPECIFIC CANNED MOMENTS IN THE SHOW
+
 function fireCue(cue) {
-  console.log('Going to send:' + cueAddress + ', 1');
+  console.log('Going to send: /cue' + cue);
   const message = new OSC_JS.message('/cue', cue);
   console.log(message);
   osc.send(message);
 
-
 }
+
+// HUNTER -- THIS FUNCTION ALLOWS THE AI TO SPEAK WITHOUT CHANGING STATE
+// IT SHOULD JUST RECEIVE THE SELECTION AND TTS IT WITH NO OTHER CHANGE 
 
 function tellComment(event) {
   event.preventDefault(); 
@@ -348,6 +358,10 @@ osc.on('/state', (message) => {
 var osc_node = require('node-osc');
 var oscServer = new osc_node.Server(srv_port, '0.0.0.0');
 
+
+// HUNTER: I ADDED THE gotQuestions (THE TRACKING BOOLEAN) TO THE OSC MESSAGE RECEIVE BELOW
+// SO THAT THE QUESTIONS DON'T APPEAR IN TRIPLICATE AND ERASE PROPERLY
+// IF THERE'S A BUG ANYWHERE, IT'S HERE 
 
 oscServer.on("message", function (msg, rinfo) {
       console.log("TUIO message:");
