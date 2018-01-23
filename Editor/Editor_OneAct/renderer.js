@@ -188,7 +188,7 @@ function playSoundFile(text, sendSilent = false) {
     onend: () => {
       if (sendSilent){
         console.log("silent room")
-        const message = new OSCSJS.Message('/silent', 1);
+        const message = new OSC_JS.Message('/silent', 1);
         const message1 = new OSC_JS.Message('/silent', 1);
         const message2 = new OSC_JS.Message('/silent', 1);
         console.log(message);
@@ -313,7 +313,7 @@ function askQuestion(event) {
 
 function fireCue(cue) {
   console.log('Going to send: /cue' + cue);
-  const message = new OSC_JS.message('/cue', cue);
+  const message = new OSC_JS.Message('/cue', cue);
   console.log(message);
   osc.send(message);
 
