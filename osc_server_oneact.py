@@ -167,10 +167,11 @@ def broadcast_text(AItext):
     broadcast_state(num_tries=3)
     return None
 
+"""
 def fireCue(action):
     logger.info("Setting action {}".format(state))
     osc_dispatch('/cue', action)
-
+"""
 
 def send_questions_to_line_editor(num_tries=3):
     """
@@ -226,6 +227,8 @@ def reset_handler(unused_addr, args):
     current_state.update({'/action': 'start'})
     broadcast_state()
     return None
+
+## HUNTER -- THIS IS THE FUNCTION THAT HANDLES CUES FROM THE LINE EDITOR
 
 def cue_handler(unused_addr, args):
     """
@@ -370,6 +373,9 @@ def osc_server(ip=ip_osc_server, port=port_server):
     dispatch.map("/closesurface", surfacestop_handler)
     dispatch.map("/resetsurface", surfacereset_handler)
     dispatch.map("/newstate", new_state_handler)
+
+## HUNTER -- NEW DISPATCH FOR CUES 
+
     dispatch.map("/cue", cue_handler)
 
     server = pythonosc.osc_server.ThreadingOSCUDPServer(
