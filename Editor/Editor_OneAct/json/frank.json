@@ -1,10 +1,9 @@
 [{
-	"tolerant": {
-
-		"0": "TEXT",
-		"1": "TEXT",
-		"2": "TEXT",
-		"3": "TEXT"
+		"emotion":"tolerant",
+		"text0": "TEXT",
+		"text1": "TEXT",
+		"text2": "TEXT",
+		"text3": "TEXT"
 
 	},
 
@@ -74,7 +73,7 @@
 		"3": "TEXT"
 
 	},	
-	"guarded": {
+	"fearful": {
 
      	"0": "TEXT",
 		"1": "TEXT",

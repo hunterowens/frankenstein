@@ -42,10 +42,7 @@ request('/json/reddit.json', function(error, response, body){
     console.log('statusCode:', response && response.statusCode); 
     console.log('body:', frank); 
     console.log("Calling reddit JSON");
-    var reddit = JSON.parse(body);
-    console.log('error:', error);
-    console.log('statusCode:', response && response.statusCode); 
-    console.log('body:', frank); 
+
 });
 
 request('/json/fake.json', function(error, response, body){
@@ -81,12 +78,12 @@ function closeConnection() {
   osc.close();
 }
 
-function sendRefresh() {
+function sendRefresh(content) {
   remote.getGlobal('sharedObject').questionSelected = '';
   document.getElementById('questions').innerHTML = 'Waiting for text...';
-  const message = new OSC_JS.Message('/refresh', 1)
-  const message1 = new OSC_JS.Message('/refresh', 1);
-  const message2 = new OSC_JS.Message('/refresh', 1);
+  const message = new OSC_JS.Message('/refresh', content)
+  const message1 = new OSC_JS.Message('/refresh', content);
+  const message2 = new OSC_JS.Message('/refresh', content);
   console.log(message);
   osc.send(message);
   osc.send(message1);
@@ -95,39 +92,6 @@ function sendRefresh() {
 
 // HUNTER -- THESE ARE NEW FUNCTIONS THAT GET TEXT FROM  JSON FILES FOR AI STATEMENTS.
 // THIS SHOULD FUNCTION EXACTLY LIKE refreshQuestions() EXCEPT THAT IT PULLS FROM JSON. 
-
-function sendFrank() {
-  remote.getGlobal('sharedObject').questionSelected = ""
-  state = remote.getGlobal('sharedObject').state;
-  for(var i=0; i<listCount; i++) {
-     addQuestion(frank[state][i], i); //frank has 48
-  }
- addOpenSubmissionOption();
-  document.getElementById('user-question').addEventListener('input', () => {
-   const openOption = document.getElementById('open-option');
-   openOption.disabled = false;
-   openOption.checked = true;
-   remote.getGlobal('sharedObject').questionSelected = document.getElementById('user-question').value;  }
-
-)}
-
-
-function sendFake() {
-
-  remote.getGlobal('sharedObject').questionSelected = "";
-  state = remote.getGlobal('sharedObject').state;
-  for(var i=0; i<listCount; i++) {
-     addQuestion(fake[state][i], i); // fake has 48
-  }
- addOpenSubmissionOption();
-  document.getElementById('user-question').addEventListener('input', () => {
-   const openOption = document.getElementById('open-option');
-   openOption.disabled = false;
-   openOption.checked = true;
-   remote.getGlobal('sharedObject').questionSelected = document.getElementById('user-question').value;  }
-
-)}
-
 
 function sendFunny() {
   remote.getGlobal('sharedObject').questionSelected = "";
@@ -159,19 +123,6 @@ function sendTell() {
 )}
 
 
-function sendReddit() {
-  remote.getGlobal('sharedObject').questionSelected = "";
-  state = remote.getGlobal('sharedObject').state;
-  for(var i=0; i<listCount; i++) {
-     addQuestion(reddit[state][i], i); //reddit has 48
-  };
- addOpenSubmissionOption();
-  document.getElementById('user-question').addEventListener('input', () => {
-   const openOption = document.getElementById('open-option');
-   openOption.disabled = false;
-   openOption.checked = true;
-   remote.getGlobal('sharedObject').questionSelected = document.getElementById('user-question').value;}
-)}
 
 // HUNTER -- END OF NEW REFRESH FUNCTIONS
 
@@ -211,42 +162,40 @@ function selectOptionSubmissionQuestion() {
   remote.getGlobal('sharedObject').questionSelected = userQuestion;
 }
 
-function sayHello() {
+function sayIntro() {
   //var text = "Welcome to my Lab. Thank you so much for your contributions in the parlour. Your emotional input is making a significant impact on my learning. As my assistants have told you, I have been scraping the internet for information about humans. You can imagine what kinds of crazy things I have been learning about your kind during my virtual travels. Now, I need you help"
-  request('http://frankenstein.hunterowens.net/form-data/all', function (error, response, body) {
-    console.log('error:', error); // Print the error if one occurred
-    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-    console.log('body:', body); // Print the HTML for the Google homepage
-    const message = new OSC_JS.Message('/talking', 1)
-    const message1 = new OSC_JS.Message('/talking', 1)
-    const message2 = new OSC_JS.Message('/talking', 1)
+//  request('http://frankenstein.hunterowens.net/form-data/all', function (error, response, body) {
+//    console.log('error:', error); // Print the error if one occurred
+//    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+//    console.log('body:', body); // Print the HTML for the Google homepage
+    const message = new OSC_JS.Message('/cue', 'intro')
+    const message1 = new OSC_JS.Message('/cue', 'intro')
+    const message2 = new OSC_JS.Message('/cue', 'intro')
     var text = "";
     osc.send(message);
     osc.send(message1);
     osc.send(message2);
-    console.log("sending say hello " + message);
-    obj = JSON.parse(body);
-    var question = obj[1].question[0]; 
-    request('http://frankenstein.hunterowens.net/interact', function (error, response, body) {
-      const status = JSON.parse(body);
-      const state = status.state2;
-      console.log("API state: " + state)
-      text += "Welcome to my Lab. Thank you for your contributions in the parlour. Your emotional data is making a significant impact on my learning., I parsed through the data you gave me, and "
-      text += state
-      text += " is the emotion I found. But I don’t understand why you wanted me to express this emotion. "
-      text += " As my assistants told you, I have been scraping the internet for information about humans. You can imagine what kinds of crazy things I learned about your kind. Now I need to add to my corpus with data from actual human beings. I have taken data: "
+    console.log("sending intro cue");
+//    obj = JSON.parse(body);
+//    var question = obj[1].question[0]; 
+//    request('http://frankenstein.hunterowens.net/interact', function (error, response, body) {
+//      const status = JSON.parse(body);
+//      const state = status.state2;
+ //     console.log("API state: " + state)
+      text = "THIS IS THE INTRO TEXT LA LA LA LA LA LOL LOL LOL"
+ //     text += state
+ //     text += " is the emotion I found. But I don’t understand why you wanted me to express this emotion. "
+//      text += " As my assistants told you, I have been scraping the internet for information about humans. You can imagine what kinds of crazy things I learned about your kind. Now I need to add to my corpus with data from actual human beings. I have taken data: "
       
-      for (i in obj) {
-        text = text + " " + obj[i].name[0] + "!";
-      }
-      text += " Now, I will begin our inquiry with the question you all found the most intriguing: "
-      text += question;
+ //     for (i in obj) {
+ //       text = text + " " + obj[i].name[0] + "!";
+ //     }
+ //     text += " Now, I will begin our inquiry with the question you all found the most intriguing: "
+ //     text += question;
       setTimeout(function () {
         console.log(text);
         playSoundFile(text, true);
       }, 3000);
-    });
-  });
 } 
 
 function addQuestion(message, questionNumber) {
