@@ -96,7 +96,7 @@ def gen_markov(fp,lines):
     return m
 
 if __name__ == '__main__':
-    from api import db, Sentence
+    from api import db, Sentence, Sentence_Shelly
     data  = pd.read_csv('./sentiment/training_data.csv', skiprows=[1])
     data['cat'] = data.apply(catagorize, axis = 1)
     t, le = generate_model(data)
@@ -118,6 +118,18 @@ if __name__ == '__main__':
         joblib.dump(cat_data, open('./saved/cat_data.p', 'wb')) 
     else:
         cat_data = joblib.load(open('./saved/cat_data.p','rb'))
+    
+    # actual frankenstein
+    print("actually frankenstein now")
+    with open('./data/frankenstein_org.txt') as f:
+        text = f.read()
+    lines = text.split('\n')
+    from tqdm import tqdm
+    for line in tqdm(lines):
+        cat = le.classes_[t.predict([line])][0]
+        s = Sentence_Shelly(text=line, cat = cat) 
+        db.session.add(s)
+    
     for key in cat_data.keys():
         gen_markov('./saved/faken-markov/' + key + '.p', cat_data[key])
     # Questions Markov

@@ -6,6 +6,8 @@ import datetime
 import os
 import joblib
 import pandas as pd
+import numpy as np 
+
 app = Flask(__name__)
 
 print("Database URL: ", os.environ.get('DATABASE_URL', 'postgresql://hunterowens:@localhost/hunterowens'))
@@ -31,6 +33,13 @@ class Sentence(db.Model):
     created_date = db.Column(db.DateTime, default=datetime.datetime.now())
     text = db.Column(db.String(5000))
     cat = db.Column(db.String(50))
+
+class Sentence_Shelly(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    created_date = db.Column(db.DateTime, default=datetime.datetime.now())
+    text = db.Column(db.String(5000))
+    cat = db.Column(db.String(50))
+
 @app.route('/')
 def test():
     """
@@ -142,16 +151,13 @@ def talk():
     data['state2'] = list_probs[1]
     data['state3'] = list_probs[2]
     data['statement'] = None
-    #if os.path.exists('./saved/faken-markov/' + cat + '.p'):
-    #    f_mark = joblib.load(open('./saved/faken-markov/' + cat + '.p', 'rb'))
-    #    for _ in range(4):
-    #        texts = [f_mark.make_sentence() for i in range(8)]
-    #    data['statement'] = texts 
-    if 1 == 1: 
-        f_mark = joblib.load(open('./saved/faken-markov/sad.p', 'rb'))
-        for _ in range(4):
-            texts = [f_mark.make_sentence() for i in range(8)]
-        data['statement'] = texts
+    sentences = Sentence.query.filter_by(cat = cat).limit(100).all()
+    texts = [np.random.choice(sentences).text for s in range(8)]
+    data['statement'] = texts
+    data['statement_real'] = None
+    sentences_shelly = Sentence_Shelly.query.filter_by(cat = cat).limit(100).all()
+    texts_org = [np.random.choice(sentences).text for s in range(8)]
+    data['statement_real'] = texts_org
     return jsonify(data)
 
 @app.route("/form-data", methods=['GET','POST'])
