@@ -312,6 +312,15 @@ function fireCue(cue) {
 
 }
 
+function tellComment(event) {
+  event.preventDefault(); 
+  setTimeout(() => {
+    playSoundFile(questionSelected);
+  }, delay * 1000);
+
+}
+
+
 function startShow() {
   const message = new OSC_JS.Message('/start', 1);
   console.log(message);

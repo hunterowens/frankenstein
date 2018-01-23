@@ -7,13 +7,14 @@
   </head>
   <body>
     <div class="surface-buttons">
-      <button id="startshow" onclick="fireCue('start')";">Start Show</button>
+      <button id="warn" onclick="firecue('warn')">Warn</button>
+      <button id="startshow" onclick="fireCue('start')";">Start</button>
       <button id="intro" onclick="fireCue('intro')">Intro</button>
       <button id="birth" onclick="fireCue('birth')">Birth</button>
       <button id="level1" onclick="fireCue('level1')">Level 1</button>
       <button id="level2" onclick="fireCue('level2')">Level 2</button>
       <button id="hugging" onclick="fireCue('hugging')">Hugging</button>
-      <button id="end-show" onclick="fireCue('end')">End Show</button>
+      <button id="end-show" onclick="fireCue('end')">End</button>
     </div>
     <div class="state-display">
     </div>
@@ -43,6 +44,7 @@
       <div class="submit-refresh">
         <button id="submit" onclick="submitQuestions(event);">Speak</button>
         <button id="ask" onclick="askQuestion(event);">End Speech</button>
+        <button id="comment" onclick="tellComment(event);">Comment</button>
         <button id="refresh" onclick="sendRefresh();">Question</button>
         <button id="Frank" onclick="sendFrank();">Frank</button>
         <button id="Fake" onclick="sendFake();">Fake</button>
