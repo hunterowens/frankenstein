@@ -1,0 +1,33 @@
+{
+  "build": {
+    "appId": "com.electron.editor",
+    "dmg": {},
+    "win": {
+      "target": "NSIS"
+    }
+  },
+  "name": "editor",
+  "description": "Editor app.",
+  "author": "Brick Simple",
+  "version": "0.1.0",
+  "main": "main.js",
+  "scripts": {
+    "postinstall": "install-app-deps",
+    "start": "electron .",
+    "pack": "build --dir",
+    "dist": "build",
+    "build:win": "build --win dir"
+  },
+  "devDependencies": {
+    "electron": "^1.7.11",
+    "electron-builder": "^19.54.0"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "electron-context-menu": "^0.9.1",
+    "node-osc": "^2.1.0",
+    "osc-js": "^1.2.2",
+    "request": "^2.83.0",
+    "underscore": "^1.8.3"
+  }
+}

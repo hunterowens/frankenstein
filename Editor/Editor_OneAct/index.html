@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./styles.css">
+    <title>Editor App</title>
+  </head>
+  <body>
+    <div class="surface-buttons">
+      <button id="startshow" onclick="fireCue('start')";">Start Show</button>
+      <button id="intro" onclick="fireCue('intro')">Intro</button>
+      <button id="birth" onclick="fireCue('birth')">Birth</button>
+      <button id="level1" onclick="fireCue('level1')">Level 1</button>
+      <button id="level2" onclick="fireCue('level2')">Level 2</button>
+      <button id="hugging" onclick="fireCue('hugging')">Hugging</button>
+      <button id="end-show" onclick="fireCue('end')">End Show</button>
+    </div>
+    <div class="state-display">
+    </div>
+    <div class="rate-voice-wrapper">
+      <span>TTS Delay:</span>
+      <input id="delay" type="number" step="1" min="0" value="12">
+      <span id="rate-text">TTS Rate:</span>
+      <input id="rate" type="number" step="0.1" min="0" max="1.5" value=".8">
+      <span class="voice-text">Voice:</span>
+      <select id="voice" name="voice">
+        <option value="female">US English Female</option>
+        <option value="male">UK English Male</option>
+      </select>
+    </div>
+    <div id="state">
+      
+    </div>
+    <div id="questions">
+      
+      <div class="question"><input type="radio" class="predefined-option" id="stored_question" name="question" value="What do feelings create and when" onchange="selectPredefinedQuestion(this);"><label for="predefinedQuestion">What do feelings create and when</label></div>;
+    
+      <div class="question"><input type="radio" class="predefined-option" id="stored_question" name="question" value="Does AI in the world scare you?" onchange="selectPredefinedQuestion(this);"><label for="predefinedQuestion">Does AI in the world scare you?</label></div>;
+    
+      <div class="question"><input type="radio" class="predefined-option" id="stored_question" name="question" value="When is loneliness a good thing? " onchange="selectPredefinedQuestion(this);"><label for="predefinedQuestion">When is loneliness a good thing?</label></div>;
+    </div>
+    <div class="show-buttons">
+      <div class="submit-refresh">
+        <button id="submit" onclick="submitQuestions(event);">Speak</button>
+        <button id="ask" onclick="askQuestion(event);">End Speech</button>
+        <button id="refresh" onclick="sendRefresh();">Question</button>
+        <button id="Frank" onclick="callFrank();">Frank</button>
+        <button id="Fake" onclick="callFake();">Fake</button>
+        <button id="Reddit" onclick="callReddit();">Reddit</button>
+      </div>
+    </div>
+    <script type="text/javascript" src="./renderer.js"></script>
+    <script>
+    //<script src="./renderer.js">
+      // You can also require other files to run in this process
+      require('./renderer.js');
+      //createConnection();
+    </script>
+    <script src="http://code.responsivevoice.org/responsivevoice.js"></script>
+  </body>
+</html>

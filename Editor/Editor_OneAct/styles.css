@@ -1,0 +1,175 @@
+body, html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.rate-voice-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.rate-voice-wrapper span {
+  margin-right: 5px;
+  font-size: 1.25em;
+}
+
+.voice-text, #rate-text {
+  margin-left: 50px;
+}
+
+.rate-voice-wrapper input {
+  width: 50px;
+  height: 25px;
+  font-size: 1em;
+  text-align: center;
+}
+
+.rate-voice-wrapper select {
+  height: 25px;
+  font-size: 1em;
+}
+
+#state {
+  font-size: 3em;
+  margin-bottom: 50px;
+  text-align: center;
+  margin-top: 50px;
+}
+
+#questions {
+  font-size: 1.5em;
+  margin-bottom: 50px;
+  width: 50%;
+  text-align: center;
+}
+
+.show-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 50%;
+}
+
+.submit-refresh {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+#submit {
+  margin-right: 25px;
+  background-color: lightgreen;
+}
+
+#ask {
+  margin-right: 25px;
+  background-color: pink; 
+}
+
+#refresh {
+  background-color: yellow;
+}
+
+#submit {
+  height: 40px;
+  width: 100px;
+  font-size: 1.5em;
+  border-radius: 5px;
+}
+
+#refresh {
+  height: 40px;
+  width: 100px;
+  font-size: 1.2em;
+  border-radius: 5px;
+}
+
+#Frank, #Fake, #Reddit {
+  height: 40px;
+  width: 100px;
+  font-size: 1.5em;
+  border-radius: 5px;
+  background-color: lightblue;
+}
+
+#ask {
+  height: 40px;
+  width: 100px;
+  border-radius: 5px;
+}
+
+#end-show {
+  height: 40px;
+  width: 100px;
+  color: white;
+  font-size: 1em;
+  background-color: red;
+  border-radius: 5px;
+}
+
+.surface-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 50px;
+  width: 50%;
+}
+
+#startshow, #intro, #birth, #level1, #level2, #hugging {
+  height: 40px;
+  width: 125px;
+  font-size: 1em;
+  border-radius: 5px;
+  color: white;
+}
+
+#cue1, #cue2, #cue3 {
+  background-color: orange;  
+}
+
+#intro, #birth, #level1, #level2, #hugging {
+
+  background-color: orange;
+}
+
+#startshow {
+
+  background-color: green; 
+}
+
+input[type="radio"] {
+  margin-right: 10px;
+  width: 15px;
+  height: 15px;
+}
+
+.question {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.question input[type="text"] {
+  width: 100%;
+  height: 25px;
+  font-size: 1em;
+}
+
+.predefined-option:hover, label, .open-option:hover, button:hover {
+  cursor: pointer;
+}
+
+button:focus {
+  outline:0;
+}
