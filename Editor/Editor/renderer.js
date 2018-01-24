@@ -11,6 +11,7 @@ const osc = new OSC({ plugin: new OSC.DatagramPlugin(options) });
 console.log('OSC: ', osc);
 
 var current_status;
+var gotQuestions; 
 
 // Set host property for address other than localhost; eg. {host: 192.168.0.100, port: 7007}
 // function createConnection() {
@@ -121,6 +122,7 @@ function addOpenSubmissionOption() {
 
 function submitQuestions(event) {
   event.preventDefault();
+  gotQuestions = false; 
   const questionSelected = remote.getGlobal('sharedObject').questionSelected;
   const delay = document.getElementById('delay').value;
   if (questionSelected === '') { return; }
@@ -143,6 +145,7 @@ function submitQuestions(event) {
 
 function askQuestion(event) {
   event.preventDefault();
+  gotQuestions = false; 
   const questionSelected = remote.getGlobal('sharedObject').questionSelected;
   const delay = document.getElementById('delay').value;
   if (questionSelected === '') { return; }
@@ -206,23 +209,26 @@ var oscServer = new osc_node.Server(srv_port, '0.0.0.0');
 
 oscServer.on("message", function (msg, rinfo) {
       console.log("TUIO message:");
+      if(!gotQuestions){}
       console.log(msg);
-      endpoint = msg[0];
-      console.log(endpoint);
-      if (endpoint == '/textques') {
-        console.log("in textques") 
-        addQuestion(msg[1], '0');
-        addQuestion(msg[2], '1');
-        addQuestion(msg[3], '2');
-        addQuestion(msg[4], '3');
-        addOpenSubmissionOption();
-        document.getElementById('user-question').addEventListener('input', () => {
-          const openOption = document.getElementById('open-option');
-          openOption.disabled = false;
-          openOption.checked = true;
-          remote.getGlobal('sharedObject').questionSelected = document.getElementById('user-question').value;
-        }); 
-      
+        document.getElementById('questions').innerHTML = ""; 
+        endpoint = msg[0];
+        console.log(endpoint);
+       if (endpoint == '/textques') {
+         console.log("in textques") 
+         addQuestion(msg[1], '0');
+         addQuestion(msg[2], '1');
+         addQuestion(msg[3], '2');
+         addQuestion(msg[4], '3');
+         addOpenSubmissionOption();
+          document.getElementById('user-question').addEventListener('input', () => {
+           const openOption = document.getElementById('open-option');
+           openOption.disabled = false;
+           openOption.checked = true;
+           remote.getGlobal('sharedObject').questionSelected = document.getElementById('user-question').value;
+         }); 
+        gotQuestions = true;  
+      }
     }
   });
 

@@ -27,7 +27,7 @@ ch.setFormatter(formatter)
 # add the handlers to the logger
 logger.addHandler(fh)
 logger.addHandler(ch)
-def osc_dispatch(addr, msg, ip=ip_osc_server, port=port_client, num_tries=1):
+def osc_dispatch(addr, msg, ip=ip_osc, port=port_client, num_tries=1):
     """
     Dispatches a message in state change over OSC to all listeners
     """

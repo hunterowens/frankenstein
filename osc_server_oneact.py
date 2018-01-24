@@ -361,13 +361,13 @@ def osc_server(ip=ip_osc_server, port=port_server):
     """
     
     dispatch.map("/surface-sentiments", surface_handler)
-    dispatch.map("/reset", reset_handler)
-    dispatch.map("/silent", silent_handler)
+    dispatch.map("/start2", reset_handler)
+    dispatch.map("/silent2", silent_handler)
     dispatch.map("/answer", answer_handler)
-    dispatch.map("/refresh", refresh_handler)
-    dispatch.map("/talking", talking_handler)
-    dispatch.map("/end", end_handler)
-    dispatch.map("/question", question_handler)
+    dispatch.map("/refresh2", refresh_handler)
+    dispatch.map("/talking2", talking_handler)
+    dispatch.map("/end2", end_handler)
+    dispatch.map("/question2", question_handler)
     dispatch.map("/thinking", thinking_handler)
     dispatch.map("/startsurface", surfacestart_handler)
     dispatch.map("/closesurface", surfacestop_handler)
@@ -376,7 +376,7 @@ def osc_server(ip=ip_osc_server, port=port_server):
 
 ## HUNTER -- NEW DISPATCH FOR CUES 
 
-    dispatch.map("/cue", cue_handler)
+    dispatch.map("/cue2", cue_handler)
 
     server = pythonosc.osc_server.ThreadingOSCUDPServer(
          (ip, port), dispatch)
