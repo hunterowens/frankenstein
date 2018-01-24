@@ -177,7 +177,7 @@ def send_questions_to_line_editor(num_tries=3):
     """
     Sends data for display to Line Editor
     """
-    data = get_api_interact_data()['questions']
+    data = get_api_talk_data()['questions']
     broadcast_state()
     logger.info("Called send question to the line editor")
     ip=ip_osc
