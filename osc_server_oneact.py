@@ -185,9 +185,9 @@ def send_questions_to_line_editor(num_tries=3):
     client = udp_client.UDPClient(ip, port,1)
     logger.info("Prepping to send Data to Line Editor {}:{}", ip, port)
     builder = osc_message_builder.OscMessageBuilder(address='/textques')
-    for v in data:
-        logger.info("sending ", v)
-        builder.add_arg(v)
+    #for v in data:
+    #    logger.info("sending ", v)
+    builder.add_arg("random clean string")
     for _ in range(num_tries):
         client.send(builder.build()) 
         logger.info("sent {0} to {1}:{2}. Attempt {3}".format(builder.args, ip, port, _))
