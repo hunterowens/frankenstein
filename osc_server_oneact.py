@@ -177,7 +177,7 @@ def send_questions_to_line_editor(num_tries=3):
     """
     Sends data for display to Line Editor
     """
-    data = get_api_interact_data()['questions']
+    data = get_api_talk_data()['statement'] + get_api_talk_data()['statement_real']
     broadcast_state()
     logger.info("Called send question to the line editor")
     ip=ip_osc
@@ -185,9 +185,8 @@ def send_questions_to_line_editor(num_tries=3):
     client = udp_client.UDPClient(ip, port,1)
     logger.info("Prepping to send Data to Line Editor {}:{}", ip, port)
     builder = osc_message_builder.OscMessageBuilder(address='/textques')
-    data = get_api_talk_data()[subject]
-    for k,v in data.items():
-        logger.info(k,v)
+    for v in data:
+        logger.info("sending ", v)
         builder.add_arg(v)
     for _ in range(num_tries):
         client.send(builder.build()) 
