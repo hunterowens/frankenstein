@@ -273,6 +273,7 @@ function fireCue(cue) {
 
 function tellComment(event) {
   event.preventDefault(); 
+  const questionSelected = remote.getGlobal('sharedObject').questionSelected;
   setTimeout(() => {
     playSoundFile(questionSelected);
   }, delay * 1000);
