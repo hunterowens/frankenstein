@@ -81,9 +81,9 @@ function closeConnection() {
 function sendRefresh(content) {
   remote.getGlobal('sharedObject').questionSelected = '';
   document.getElementById('questions').innerHTML = 'Waiting for text...';
-  const message = new OSC_JS.Message('/refresh', content)
-  const message1 = new OSC_JS.Message('/refresh', content);
-  const message2 = new OSC_JS.Message('/refresh', content);
+  const message = new OSC_JS.Message('/refresh2', content)
+  const message1 = new OSC_JS.Message('/refresh2', content);
+  const message2 = new OSC_JS.Message('/refresh2', content);
   console.log(message);
   osc.send(message);
   osc.send(message1);
@@ -139,9 +139,9 @@ function playSoundFile(text, sendSilent = false) {
     onend: () => {
       if (sendSilent){
         console.log("silent room")
-        const message = new OSC_JS.Message('/silent', 1);
-        const message1 = new OSC_JS.Message('/silent', 1);
-        const message2 = new OSC_JS.Message('/silent', 1);
+        const message = new OSC_JS.Message('/silent2', 1);
+        const message1 = new OSC_JS.Message('/silent2', 1);
+        const message2 = new OSC_JS.Message('/silent2', 1);
         console.log(message);
         osc.send(message);
         osc.send(message1);
@@ -168,9 +168,9 @@ function sayIntro() {
 //    console.log('error:', error); // Print the error if one occurred
 //    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
 //    console.log('body:', body); // Print the HTML for the Google homepage
-    const message = new OSC_JS.Message('/cue', 'intro')
-    const message1 = new OSC_JS.Message('/cue', 'intro')
-    const message2 = new OSC_JS.Message('/cue', 'intro')
+    const message = new OSC_JS.Message('/cue2', 'intro')
+    const message1 = new OSC_JS.Message('/cue2', 'intro')
+    const message2 = new OSC_JS.Message('/cue2', 'intro')
     var text = "";
     osc.send(message);
     osc.send(message1);
@@ -217,9 +217,9 @@ function submitQuestions(event) {
   const questionSelected = remote.getGlobal('sharedObject').questionSelected;
   const delay = document.getElementById('delay').value;
   if (questionSelected === '') { return; }
-  const message = new OSC_JS.Message('/talking', questionSelected);
-  const message1 = new OSC_JS.Message('/talking', questionSelected);
-  const message2 = new OSC_JS.Message('/talking', questionSelected);
+  const message = new OSC_JS.Message('/talking2', questionSelected);
+  const message1 = new OSC_JS.Message('/talking2', questionSelected);
+  const message2 = new OSC_JS.Message('/talking2', questionSelected);
   console.log('Question: ', questionSelected, 'Delay: ', delay, 'Message: ', message);
   osc.send(message);
   osc.send(message1);
@@ -240,9 +240,9 @@ function askQuestion(event) {
   const questionSelected = remote.getGlobal('sharedObject').questionSelected;
   const delay = document.getElementById('delay').value;
   if (questionSelected === '') { return; }
-  const message = new OSC_JS.Message('/question', questionSelected);
-  const message1 = new OSC_JS.Message('/question', questionSelected);
-  const message2 = new OSC_JS.Message('/question', questionSelected);
+  const message = new OSC_JS.Message('/question2', questionSelected);
+  const message1 = new OSC_JS.Message('/question2', questionSelected);
+  const message2 = new OSC_JS.Message('/question2', questionSelected);
   console.log('Question: ', questionSelected, 'Delay: ', delay, 'Message: ', message);
   osc.send(message);
   osc.send(message1);
@@ -262,7 +262,7 @@ function askQuestion(event) {
 
 function fireCue(cue) {
   console.log('Going to send: /cue' + cue);
-  const message = new OSC_JS.Message('/cue', cue);
+  const message = new OSC_JS.Message('/cue2', cue);
   console.log(message);
   osc.send(message);
 
@@ -282,13 +282,13 @@ function tellComment(event) {
 
 
 function startShow() {
-  const message = new OSC_JS.Message('/start', 1);
+  const message = new OSC_JS.Message('/start2', 1);
   console.log(message);
   osc.send(message);
 }
 
 function endShow() {
-  const message = new OSC_JS.Message('/end', 1);
+  const message = new OSC_JS.Message('/end2', 1);
   console.log(message);
   request('http://frankenstein.hunterowens.net/reset', function (error, response, body) {
     console.log("API Reset Status Good: " + body)
