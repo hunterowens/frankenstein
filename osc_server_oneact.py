@@ -236,7 +236,7 @@ def cue_handler(unused_addr, args):
     Handles the cues from Editor
     """
     logger.info('send cue {}'.format(args))
-    osc_dispatch('/cue', args)
+    osc_dispatch('/cue', args, '192.168.1.225')
     return None
 
 
