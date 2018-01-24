@@ -44,6 +44,29 @@ current_state["/energy"] = 0.0
 current_state["/focus"] = 0.0
 
 
+def get_api_interact_data():
+    """
+    Gets state from AI, transforms into sentiment.
+
+    Returns a string of JSON
+    """
+    logger.info("Getting Data from AI")
+    r = requests.get(api_url + 'interact')
+    if r.status_code == 200:
+        data = r.json()
+    else: 
+        data = pickle.load(open('./default-api-response.p','rb'))
+        logger.info("Using Default Data: {}".format(data))
+    logger.info 
+    if data['state'] != current_state['/state']:
+        current_state['/state'] = data['state']
+    else:
+        current_state['/state'] = data['state2']
+    current_state['/sentiment'] = data['sentiment']
+    current_state['/focus'] = data['focus']
+    current_state['/energy'] = data['energy']
+    logger.info('state updated from API with {0}'.format(data))
+    return data
 def change_state(current_state):
     """
     Change the current state dict to 
