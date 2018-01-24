@@ -377,7 +377,7 @@ def osc_server(ip=ip_osc_server, port=port_server):
 
 ## HUNTER -- NEW DISPATCH FOR CUES 
 
-    dispatch.map("/cue", cue_handler)
+    dispatch.map("/cue2", cue_handler)
 
     server = pythonosc.osc_server.ThreadingOSCUDPServer(
          (ip, port), dispatch)
