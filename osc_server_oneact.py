@@ -102,14 +102,14 @@ def send_answer_to_ai(answer):
                       headers=headers)
     return r
 
-def get_api_interact_data():
+def get_api_talk_data():
     """
     Gets state from AI, transforms into sentiment.
 
     Returns a string of JSON
     """
     logger.info("Getting Data from AI")
-    r = requests.get(api_url + 'interact')
+    r = requests.get(api_url + 'talk')
     if r.status_code == 200:
         data = r.json()
     else: 
@@ -185,6 +185,7 @@ def send_text_to_line_editor(subject='questions', num_tries=3):
     client = udp_client.UDPClient(ip, port,1)
     logger.info("Prepping to send Data to Line Editor {}:{}", ip, port)
     builder = osc_message_builder.OscMessageBuilder(address='/textques')
+    data = get_api_talk_data()[subject]
     for k,v in data.items():
         logger.info(k,v)
         builder.add_arg(v)
