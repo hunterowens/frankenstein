@@ -1,12 +1,15 @@
-
-
 exports.helloHttp = function helloHttp (request, response) {
   var Airtable = require('airtable');
   var base = new Airtable({apiKey: 'keyLoE3zbLtTbI3VU'}).base('appTUc1Aznap8TIfJ');
   var questions = [];
+ 
+  console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
+  console.log('Dialogflow Request body: ' + JSON.stringify(request.body)); 
+
+  var intent = JSON.stringify(request.body)['intent']
   base('Table 1').select({
       // Selecting the first 3 records in Grid view:
-      maxRecords: 3,
+      maxRecords: 10,
       view: "Grid view"
   }).eachPage(function page(records, fetchNextPage) {
       // This function (`page`) will get called for each page of records.
@@ -25,5 +28,5 @@ exports.helloHttp = function helloHttp (request, response) {
       if (err) { console.error(err); return; }
       response.json({ fulfillmentText: questions[Math.floor(Math.random()*questions.length)]});
   });
-    
+
 };
