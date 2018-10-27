@@ -8,12 +8,28 @@ import joblib
 import pandas as pd
 import numpy as np 
 
+from flask_alembic import Alembic
+import enum
+
+alembic = Alembic()
 app = Flask(__name__)
+alembic.init_app(app)
+print("Database URL: ", os.environ.get('DATABASE_URL', 'postgresql://hunterowens:@localhost/frankenstein'))
 
-print("Database URL: ", os.environ.get('DATABASE_URL', 'postgresql://hunterowens:@localhost/hunterowens'))
-
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://hunterowens:@localhost/hunterowens')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://hunterowens:@localhost/frankenstein')
 db = SQLAlchemy(app)
+
+class StatusEnum(enum.Enum):
+    preshow = 'preshow'
+    in_progress = 'in_progress'
+    complete = 'complete'
+
+
+class ShowRun(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    status = db.Column(db.Enum(StatusEnum))
+    act = db.Column(db.Integer)
 
 class State(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -22,31 +38,69 @@ class State(db.Model):
     focus = db.Column(db.Float)
     energy = db.Column(db.Float)
     text = db.Column(db.String(5000))
+    showrun = db.Column(db.Integer, db.ForeignKey('show_run.id'),
+                        nullable=False)
+ 
+    
 
 class FormData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_date = db.Column(db.DateTime, default=datetime.datetime.now())
     data = db.Column(db.JSON)
+    showrun = db.Column(db.Integer, db.ForeignKey('show_run.id'),
+                        nullable=False)
 
 class Sentence(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_date = db.Column(db.DateTime, default=datetime.datetime.now())
     text = db.Column(db.String(5000))
     cat = db.Column(db.String(50))
+    showrun = db.Column(db.Integer, db.ForeignKey('show_run.id'),
+                        nullable=False)
 
 class Sentence_Shelly(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_date = db.Column(db.DateTime, default=datetime.datetime.now())
     text = db.Column(db.String(5000))
     cat = db.Column(db.String(50))
+    showrun = db.Column(db.Integer, db.ForeignKey('show_run.id'),
+                        nullable=False)
+
+## TODO Activte Tables Endpoint
 
 @app.route('/')
 def test():
     """
     fake home                 
     """
-    return "Test works"
+    return jsonify({'data': "api_online"})
 
+@app.route('/start-show')
+def start_show():
+    """
+    starts a show by saving it in the intial state in the db
+    ret: dict of show. 
+    """
+    show = ShowRun(status='preshow')
+    db.session.add(show)
+    db.session.commit()
+    return jsonify({'data': [{'show_id': show.id,
+                              'show_date': show.created_date,
+                              'show_status': show.status.name  
+                             }]})
+
+@app.route('/list-shows')
+def list_shows():
+    """
+    return all the shows
+    """ 
+    shows = ShowRun.query.all()
+    ret = []
+    for show in shows:
+        ret.append({'show_id': show.id,
+                    'show_date': show.created_date,
+                    'show_status': show.status.name})
+    return jsonify({'date': ret})
 @app.route("/reset")
 def reset():
     """
@@ -84,7 +138,7 @@ def interact():
         db.session.add(s)
         db.session.commit()
         # print('saved ', s)
-        return "saved interact"
+        return jsonify({'saved': data})
     elif request.method == 'GET':
         ## Get most recent state info
         s = State.query.order_by(State.created_date.desc()).first()
@@ -196,7 +250,6 @@ if __name__ == '__main__':
     if env == 'prod':
         app.run(host='0.0.0.0')
     else:
-        db.create_all()
         app.run(debug=True)
 
 
