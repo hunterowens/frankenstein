@@ -38,34 +38,28 @@ class State(db.Model):
     focus = db.Column(db.Float)
     energy = db.Column(db.Float)
     text = db.Column(db.String(5000))
-    showrun = db.Column(db.Integer, db.ForeignKey('show_run.id'),
-                        nullable=False)
- 
+    showrun = db.Column(db.Integer, db.ForeignKey('show_run.id')) 
     
 
 class FormData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_date = db.Column(db.DateTime, default=datetime.datetime.now())
     data = db.Column(db.JSON)
-    showrun = db.Column(db.Integer, db.ForeignKey('show_run.id'),
-                        nullable=False)
+    showrun = db.Column(db.Integer, db.ForeignKey('show_run.id'))
 
 class Sentence(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_date = db.Column(db.DateTime, default=datetime.datetime.now())
     text = db.Column(db.String(5000))
     cat = db.Column(db.String(50))
-    showrun = db.Column(db.Integer, db.ForeignKey('show_run.id'),
-                        nullable=False)
+    showrun = db.Column(db.Integer, db.ForeignKey('show_run.id'))
 
 class Sentence_Shelly(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_date = db.Column(db.DateTime, default=datetime.datetime.now())
     text = db.Column(db.String(5000))
     cat = db.Column(db.String(50))
-    showrun = db.Column(db.Integer, db.ForeignKey('show_run.id'),
-                        nullable=False)
-
+    showrun = db.Column(db.Integer, db.ForeignKey('show_run.id'))
 ## TODO Activte Tables Endpoint
 
 @app.route('/')
@@ -127,21 +121,25 @@ def interact():
         focus_model = joblib.load(open('./saved/m_focus.p','rb'))
         energy_model = joblib.load(open('./saved/m_energy.p','rb'))
         string = data['string']
-        # print(data)
+        print(data)
         # print(string)
+        show_id = data['show_id']
+        print(show_id)
         def get_pred(model, string):
             return model.predict([string])[0]
         s = State(sentiment=get_pred(senti_model, string),
                   focus = get_pred(focus_model, string),
                   energy = get_pred(energy_model, string),
-                  text = string)
+                  text = string,
+                  showrun = show_id)
         db.session.add(s)
         db.session.commit()
         # print('saved ', s)
         return jsonify({'saved': data})
     elif request.method == 'GET':
         ## Get most recent state info
-        s = State.query.order_by(State.created_date.desc()).first()
+        showrun = request.args.get('show_id')
+        s = State.query.filter_by(showrun = int(showrun)).order_by(State.created_date.desc()).first()
         data={}
         data['sentiment'] = s.sentiment
         data['focus'] = s.focus
@@ -189,7 +187,8 @@ def interact_surface():
 
 @app.route("/talk", methods=["GET"])
 def talk():
-    s = State.query.order_by(State.created_date.desc()).first()
+    showrun = request.args.get('show_id')
+    s = State.query.filter_by(showrun = int(showrun)).order_by(State.created_date.desc()).first()
     data={}
     data['sentiment'] = s.sentiment
     data['focus'] = s.focus
