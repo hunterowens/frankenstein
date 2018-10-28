@@ -19,6 +19,7 @@ SQLAlchemy = "*"
 Flask-SQLAlchemy = "*"
 alembic = "*"
 flask-alembic = "*"
+ipython = "*"
 
 [dev-packages]
 pylint = "*"

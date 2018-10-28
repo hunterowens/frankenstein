@@ -7,6 +7,12 @@ import os
 import joblib
 import pandas as pd
 import numpy as np 
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn import decomposition
+import nltk 
+from nltk import word_tokenize
+from nltk.corpus import stopwords
+import itertools
 
 from flask_alembic import Alembic
 import enum
@@ -60,7 +66,19 @@ class Sentence_Shelly(db.Model):
     text = db.Column(db.String(5000))
     cat = db.Column(db.String(50))
     showrun = db.Column(db.Integer, db.ForeignKey('show_run.id'))
-## TODO Activte Tables Endpoint
+
+def tokenize_nltk(text):
+    """
+    Note: 	This function imports a list of custom stopwords from the user
+        If the user does not modify custom stopwords (default=[]),
+        there is no substantive update to the stopwords.
+    """
+    tokens = word_tokenize(text)
+    text = nltk.Text(tokens)
+    stop_words = set(stopwords.words('english'))
+    # stop_words.update(custom_stopwords)
+    words = [w.lower() for w in text if w.isalpha() and w.lower() not in stop_words]
+    return words
 
 @app.route('/')
 def test():
@@ -234,6 +252,26 @@ def color_form_data():
     query = FormData.query.order_by(FormData.created_date.desc()).limit(10)
     data = [fd.data for fd in query]
     return jsonify(data)
+
+@app.route('/summary', methods=['GET'])
+def summary():
+    showrun = request.args.get('show_id')
+    states = State.query.filter_by(showrun = int(showrun)).order_by(State.created_date.desc()).all()
+    texts = [s.text for s in states]
+    vectorizer = TfidfVectorizer(stop_words='english', min_df=1, tokenizer=tokenize_nltk)
+    dtm = vectorizer.fit_transform(texts).toarray()
+    vocab = np.array(vectorizer.get_feature_names())    
+    #Define Topic Model: LatentDirichletAllocation (LDA)
+    clf = decomposition.LatentDirichletAllocation(n_topics=5, random_state=3)
+    num_top_words = 3
+    doctopic = clf.fit_transform(dtm)
+    topic_words = []
+    for topic in clf.components_:
+        word_idx = np.argsort(topic)[::-1][0:num_top_words]
+        topic_words.append([vocab[i] for i in word_idx])
+    merged = list(set(itertools.chain.from_iterable(topic_words))) # use set for unique items
+    return jsonify({'data': {'topics': merged}})
+
 
 
 @app.route("/submitted")
