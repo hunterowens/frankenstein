@@ -33,6 +33,8 @@ To get the summary themes
 curl http://frankenstein.hunterowens.net/summary?show_id$YOUR_SHOW_ID
 ```
 
+Alternatively, you can provide multiple show_ids to `summary`, as a comma seperate list as such: `/summary?show_ids=1,2
+
 To list all shows and show IDs 
 
 ```shell 

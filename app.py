@@ -270,9 +270,18 @@ def color_form_data():
 
 @app.route('/summary', methods=['GET'])
 def summary():
-    showrun = request.args.get('show_id')
-    states = State.query.filter_by(showrun = int(showrun)).order_by(State.created_date.desc()).all()
-    texts = [s.text for s in states]
+    if 'show_id' in request.args:
+        showrun = request.args.get('show_id')
+        states = State.query.filter_by(showrun = int(showrun)).order_by(State.created_date.desc()).all()
+        texts = [s.text for s in states]
+    else: 
+        texts = []
+        show_ids = request.args.get('show_ids')
+        show_ids = [int(x) for x in show_ids.split(',')]
+        for show_id in show_ids:
+            states = State.query.filter_by(showrun = show_id).order_by(State.created_date.desc()).all()
+            t = [s.text for s in states]
+            texts.extend(t)
     vectorizer = TfidfVectorizer(stop_words='english', min_df=1, tokenizer=tokenize_nltk)
     dtm = vectorizer.fit_transform(texts).toarray()
     vocab = np.array(vectorizer.get_feature_names())    
