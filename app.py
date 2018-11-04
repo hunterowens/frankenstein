@@ -113,6 +113,21 @@ def list_shows():
                     'show_date': show.created_date,
                     'show_status': show.status.name})
     return jsonify({'date': ret})
+
+@app.route('/update-show', methods=['POST'])
+def update_show():
+    """
+    Update show status. 
+    """
+    if request.method == 'POST':
+        data = request.get_json(force=True)
+        show_id = data['show_id']
+        show_status = data['show_status']
+        show = ShowRun.query.get(show_id)
+        show.status=show_status
+        db.session.add(show)
+        db.session.commit()
+        return jsonify({'record_updates': show_id})
 @app.route("/reset")
 def reset():
     """
