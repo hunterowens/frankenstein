@@ -44,7 +44,7 @@ To update a show
  curl --header "Content-Type: application/json" \
   --request POST \
   --data '{"show_status":"in_progress", "show_id": 1}' \
-  http://localhost:5000/update-show
+  http://frankenstein.hunterowens.net/update-show
 ```
 
 show_status can be one of `preshow`, `in_progress`,`complete`.
