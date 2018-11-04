@@ -13,6 +13,7 @@ import nltk
 from nltk import word_tokenize
 from nltk.corpus import stopwords
 import itertools
+from flask_cors import CORS
 
 from flask_alembic import Alembic
 import enum
@@ -20,6 +21,7 @@ import enum
 alembic = Alembic()
 app = Flask(__name__)
 alembic.init_app(app)
+CORS(app)
 print("Database URL: ", os.environ.get('DATABASE_URL', 'postgresql://hunterowens:@localhost/frankenstein'))
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://hunterowens:@localhost/frankenstein')

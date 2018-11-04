@@ -13,4 +13,5 @@ scikit-learn
 sqlalchemy
 scipy
 psycopg2
+flask-cors
 Flask-SQLAlchemy
