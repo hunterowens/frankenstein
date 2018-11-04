@@ -32,3 +32,19 @@ To get the summary themes
 ```shell
 curl http://frankenstein.hunterowens.net/summary?show_id$YOUR_SHOW_ID
 ```
+
+To list all shows and show IDs 
+
+```shell 
+curl http://frankenstein.hunterowens.net/list-shows
+```
+
+To update a show
+```shell
+ curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"show_status":"in_progress", "show_id": 1}' \
+  http://localhost:5000/update-show
+```
+
+show_status can be one of `preshow`, `in_progress`,`complete`.
