@@ -50,3 +50,13 @@ To update a show
 ```
 
 show_status can be one of `preshow`, `in_progress`,`complete`.
+
+To save a log
+
+```shell
+
+curl --header "Content-Type: application/json" \
+  --request POST \
+    --data '{"actor": "hunter", "show_id": 2, "text": "some text", "action": "intro"}' \
+      http://localhost:5000/log
+```
