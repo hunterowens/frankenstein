@@ -55,6 +55,13 @@ class FormData(db.Model):
     data = db.Column(db.JSON)
     showrun = db.Column(db.Integer, db.ForeignKey('show_run.id'))
 
+class Log(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    created_date = db.Column(db.DateTime, default=datetime.datetime.now())
+    data = db.Column(db.JSON)
+    showrun = db.Column(db.Integer, db.ForeignKey('show_run.id'))
+
+
 class Sentence(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_date = db.Column(db.DateTime, default=datetime.datetime.now())
@@ -302,6 +309,15 @@ def summary():
     merged = list(set(itertools.chain.from_iterable(topic_words))) # use set for unique items
     return jsonify({'data': {'topics': merged}})
 
+
+@app.route("/log", methods=['POST'])
+def log():
+    data = request.get_json(force=True)
+    show_id = data['show_id']
+    l = Log(data=data, showrun=show_id)
+    db.session.add(l)
+    db.session.commit()
+    return jsonify({'saved': data})
 
 
 @app.route("/submitted")
