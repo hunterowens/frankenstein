@@ -7,14 +7,13 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn import metrics
 import os
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from nltk.corpus import stopwords
 import string
 from nltk.stem import PorterStemmer
 from nltk import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.cross_validation import train_test_split
 from sklearn import preprocessing
 import markovify
 import joblib 
@@ -96,7 +95,7 @@ def gen_markov(fp,lines):
     return m
 
 if __name__ == '__main__':
-    from api import db, Sentence, Sentence_Shelly
+    from app import db, Sentence, Sentence_Shelly
     data  = pd.read_csv('./sentiment/training_data.csv', skiprows=[1])
     data['cat'] = data.apply(catagorize, axis = 1)
     t, le = generate_model(data)
