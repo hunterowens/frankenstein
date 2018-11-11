@@ -175,6 +175,8 @@ def interact():
         ## Get most recent state info
         showrun = request.args.get('show_id')
         s = State.query.filter_by(showrun = int(showrun)).order_by(State.created_date.desc()).first()
+        if s == None:
+            return jsonify({"error": True})
         data={}
         data['sentiment'] = s.sentiment
         data['focus'] = s.focus
@@ -224,6 +226,8 @@ def interact_surface():
 def talk():
     showrun = request.args.get('show_id')
     s = State.query.filter_by(showrun = int(showrun)).order_by(State.created_date.desc()).first()
+     if s == None:
+            return jsonify({"error": True})
     data={}
     data['sentiment'] = s.sentiment
     data['focus'] = s.focus
